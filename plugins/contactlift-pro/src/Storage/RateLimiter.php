@@ -38,29 +38,15 @@ final class RateLimiter {
 		$window_id = (string) intdiv( $now, max( 1, $window_seconds ) );
 		$expires   = gmdate( 'Y-m-d H:i:s', $now + $window_seconds );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- rate-limit counters are intentionally uncached and short-lived; dbDelta-created custom table has no wp_query abstraction.
-		$written = $wpdb->query(
-			$wpdb->prepare(
-				"INSERT INTO {$table} (bucket_key, window_id, counter, expires_at_utc)
-				VALUES (%s, %s, 1, %s)
-				ON DUPLICATE KEY UPDATE counter = counter + 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-				$bucket_key,
-				$window_id,
-				$expires
-			)
-		);
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- rate-limit counters are intentionally uncached and short-lived, dbDelta-created custom table has no wp_query abstraction.
+		$written = $wpdb->query( $wpdb->prepare( 'INSERT INTO %i (bucket_key, window_id, counter, expires_at_utc) VALUES (%s, %s, 1, %s) ON DUPLICATE KEY UPDATE counter = counter + 1', $table, $bucket_key, $window_id, $expires ) );
 
 		if ( false === $written ) {
 			return false; // fail closed: the counter couldn't be written at all.
 		}
 
-		$counter = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT counter FROM {$table} WHERE bucket_key = %s AND window_id = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-				$bucket_key,
-				$window_id
-			)
-		);
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- see comment on the INSERT above; same table, same reasoning.
+		$counter = $wpdb->get_var( $wpdb->prepare( 'SELECT counter FROM %i WHERE bucket_key = %s AND window_id = %s', $table, $bucket_key, $window_id ) );
 
 		return null !== $counter && (int) $counter <= $limit;
 	}
@@ -73,13 +59,10 @@ final class RateLimiter {
 	public function prune_expired( Clock $clock ): void {
 		global $wpdb;
 
-		$table = $wpdb->prefix . self::TABLE;
-		$now   = gmdate( 'Y-m-d H:i:s', $clock->now()->getTimestamp() );
+		$now = gmdate( 'Y-m-d H:i:s', $clock->now()->getTimestamp() );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- bulk retention cleanup on a custom table, not a cached query.
-		$wpdb->query(
-			$wpdb->prepare( "DELETE FROM {$table} WHERE expires_at_utc < %s", $now ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-		);
+		$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE expires_at_utc < %s', $wpdb->prefix . self::TABLE, $now ) );
 	}
 
 	/**

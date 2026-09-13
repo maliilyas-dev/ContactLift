@@ -137,13 +137,8 @@ final class PersonalData {
 	private function matching_rows( string $email_address ): array {
 		global $wpdb;
 
-		$table = $wpdb->prefix . CallbackRepository::TABLE;
-
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- privacy-tools export/erasure request, not a cached page-render query.
-		$rows = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE email = %s", $email_address ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-			ARRAY_A
-		);
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i WHERE email = %s', $wpdb->prefix . CallbackRepository::TABLE, $email_address ), ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
 	}

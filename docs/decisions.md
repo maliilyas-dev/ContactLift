@@ -301,3 +301,129 @@ rules" instruction. Newest at the bottom of each section.
   `tests/integration-pro/CallbackRestTest.php` (11 tests covering
   AT12-AT16 directly against the real REST server) alongside the two
   regression tests above.
+
+## Milestone 5 — Reporting, retention, export/import, privacy
+
+- **`source_id` is stored as `0`, never SQL `NULL`**, for a click event with
+  no specific content ID (home/archive pages). MySQL's unique index treats
+  every `NULL` as distinct from every other `NULL`, which would silently
+  defeat the composite unique key `DailyStatsRepository::increment()`
+  depends on for its atomic upsert — every home-page click would `INSERT` a
+  new row instead of incrementing the existing one. `0` is never a real
+  WordPress post ID, so it's a safe, unambiguous sentinel; the display side
+  (`ReportsPage::source_label()`) special-cases it back to a human label.
+- **`AnalyticsGate::is_recording_allowed(mode, gpc, is_admin)` is pure
+  decision logic**, deliberately taking its inputs as plain values rather
+  than reading `$_SERVER`/`is_user_logged_in()` itself, so all three
+  `analytics_mode` states plus the GPC and administrator overrides are
+  unit-testable without booting WordPress. GPC and administrator status
+  both unconditionally block recording regardless of mode.
+- **Retention is a strict enum, not a clamped range.**
+  `callback_retention_days` accepts exactly {30, 90, 180} and
+  `stats_retention_days` exactly {30, 90} — `ProSettingsValidator::
+  retention_choice()` rejects anything else outright rather than rounding
+  to the nearest permitted value, matching the spec's literal "choose one
+  of" wording rather than treating it as a bounded numeric field.
+- **Found while writing an integration test, not by inspection**:
+  `analytics_mode` had no admin control at all — the setting could be
+  changed only by hand-editing the option, because
+  `SettingsExtension::handle_save()` never read it from `$_POST`. Fixed
+  with a "Click reports" card (Off / Consent required / Local aggregate)
+  and the corresponding `$_POST` handling.
+- **Import/export is dry-run-then-confirm, not a single-step upload.** The
+  first submit only validates the uploaded JSON and stores the normalized
+  result in a transient keyed to the current user; nothing touches
+  `clift_settings`/`clift_bars` until a second, explicit "Replace
+  configuration now" submit reads that same transient back.
+- **CSV export neutralizes formula injection** by prefixing any cell whose
+  value starts with `=`, `+`, `-`, or `@` before it's written, so a
+  callback message or name containing one can't execute when the export is
+  opened in Excel/Sheets/Numbers.
+- **Privacy Tools integration is email-matched only; phone-only requests
+  get an authenticated admin workflow instead of a public endpoint** — a
+  public phone-lookup route would itself be a privacy hole (anyone who
+  knows a phone number could probe for whether it submitted a request).
+
+## Admin UI — searchable picker, both editions
+
+- **Native `<select multiple>` listboxes replaced with a custom
+  `Fields::picker()` component**, in response to direct feedback that the
+  existing Exclusions (free) / "Show only on" (Pro) fields looked and
+  behaved poorly — a bordered card with search-as-you-type filtering, a
+  scrollable checkbox list, and a live "N selected" count. The wire format
+  was deliberately left untouched (`name="field[]"`, same array-of-IDs
+  submission), so every validator and repository that already handled this
+  field needed zero changes.
+- **Built once in the free plugin, reused as-is by Pro** via the existing
+  `use ContactLift\Admin\Fields;` cross-plugin import — no duplicated
+  component, no Pro-specific fork of the picker markup.
+- **The live-count label is computed as PHP variables before the HTML
+  block, not inlined as `esc_attr_e('%d selected', ...)`.** The inline form
+  triggered PHPCS's `MissingTranslatorsComment` sniff even with a preceding
+  `<?php /* translators: ... */ ?>` block, because the sniff doesn't
+  associate a translators comment that sits in a separate PHP tag from the
+  `__()` call it documents. Computing the label ahead of the HTML, with the
+  translators comment directly above the `__()` call in the same statement,
+  satisfies the sniff.
+- **Verified live, not just unit-tested**: search filtering, checkbox
+  highlighted-row state, selection surviving a filter change, and a full
+  save/reload round trip confirmed against the actual `clift_bars` option
+  content — the same component renders correctly for both free's
+  Exclusions field and Pro's Include field with no edition-specific
+  branching.
+
+## Milestone 6 — Freemius guarded adapter, packaging, GitHub
+
+- **The Freemius adapter is copied from FormBridge's proven shape, not
+  designed fresh**: a `clift_fs()` singleton accessor wrapping
+  `fs_dynamic_init()`, gated by two placeholder constants
+  (`FREEMIUS_PRODUCT_ID`, `FREEMIUS_PUBLIC_KEY`). While they hold their
+  placeholder values, `clift_fs()` returns `null` immediately — no attempt
+  to call `fs_dynamic_init()` with fake credentials, no SDK `require`, just
+  a plain admin notice explaining that licensing isn't configured yet. This
+  repo has no real Freemius product, so the code must be provably inert
+  until the owner supplies one.
+- **The bare-menu-slug redirect is copied verbatim from FormBridge too**:
+  Freemius's own post-activation/account links point at the bare product
+  slug (`contactlift-pro`), which WordPress rejects with a capability error
+  since only the real `-account` page is actually registered. Fixed by
+  registering the bare slug as a real-but-hidden submenu page, redirecting
+  on `admin_init` (not the page callback — headers are already sent by the
+  time a submenu callback runs) to the real account page, and hiding the
+  bare entry from the visible nav via `admin_head` CSS.
+- **Plugin Check runs its own fixed ruleset, independent of
+  `phpcs.xml.dist`** — project-level sniff exclusions don't apply; every
+  site needs its own inline `phpcs:ignore`. Running it against the actual
+  built `contactlift-pro-1.0.0.zip` surfaced a systematic bug in several
+  existing ignore comments: a trailing
+  `// phpcs:ignore ... InterpolatedNotPrepared` comment placed at the end
+  of a multi-line SQL string doesn't suppress the violation, because PHPCS
+  attributes the violation to the line the flagged `{$table}` token sits
+  on, not the line the comment sits on. Several warnings that looked
+  suppressed in the source were never actually suppressed.
+- **Fixed at the root with `%i`, not by relocating comments.** Both
+  plugins already require WP 6.8 (the `Requires at least` header), well
+  past the WP 6.2 minimum for `$wpdb->prepare()`'s `%i` identifier
+  placeholder, and the pinned `wp-coding-standards/wpcs` (3.4.1) recognizes
+  it. Every raw-SQL table-name interpolation across `RateLimiter`,
+  `DailyStatsRepository`, `CallbackRepository` and `PersonalData` was
+  rewritten so the table name flows through `prepare()` itself as a `%i`
+  placeholder instead of being interpolated into the query string first —
+  closing the whole class of finding structurally rather than asserting
+  line-by-line that each one is safe.
+- **One WPCS false positive remains, documented rather than restructured
+  away.** `DailyStatsRepository::query()` builds its `WHERE` clause from an
+  array of conditionally-pushed string fragments (e.g. `'bar_id = %s'`) —
+  every fragment is a fixed literal from this method's own source, never
+  derived from the filter *values* (those go through separate `%s`
+  placeholders), but WPCS's static analysis can't verify that and flags the
+  variable as unescaped regardless. This is the standard, safe WordPress
+  pattern for an optional-filter `WHERE` clause, so it's suppressed with a
+  comment spelling out exactly why every possible value of that variable is
+  safe, rather than chasing a sniff that can't be satisfied by
+  restructuring.
+- **Verification order matters here**: every fix was confirmed against a
+  real MySQL database via the integration suites before re-running Plugin
+  Check, since a `%i`-based rewrite changes actual query construction, not
+  just comment placement. 147 tests green, then a clean Plugin Check pass,
+  in that order.

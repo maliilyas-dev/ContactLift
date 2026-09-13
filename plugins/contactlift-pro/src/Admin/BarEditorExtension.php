@@ -243,7 +243,7 @@ final class BarEditorExtension {
 	 * @return array<string,mixed>
 	 */
 	private function collect_schedule(): array {
-		$raw = (array) ( $_POST['schedule'] ?? array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce already verified by BarEditorPage::handle_save() before this filter runs.
+		$raw = (array) ( $_POST['schedule'] ?? array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce already verified by BarEditorPage::handle_save() before this filter runs; every leaf value is individually wp_unslash()'d and sanitized in collect_intervals() below, this outer cast just reaches into the nested structure.
 
 		$weekly = array();
 		for ( $weekday = 1; $weekday <= 7; $weekday++ ) {

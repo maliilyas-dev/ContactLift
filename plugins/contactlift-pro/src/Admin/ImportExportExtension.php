@@ -176,7 +176,7 @@ final class ImportExportExtension {
 		check_admin_referer( self::NONCE_ACTION, self::NONCE_FIELD );
 
 		$redirect = $this->tools_url();
-		$file     = $_FILES['import_file'] ?? null; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified above via check_admin_referer().
+		$file     = $_FILES['import_file'] ?? null; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- verified above via check_admin_referer(); only PHP's own upload metadata (error/size/tmp_name, never the user-supplied original filename) is read below, and the file's JSON content is fully validated by ConfigImporter before anything is trusted.
 
 		if ( ! is_array( $file ) || UPLOAD_ERR_OK !== ( $file['error'] ?? UPLOAD_ERR_NO_FILE ) ) {
 			$this->store_pending( array( 'errors' => array( __( 'Choose a file to upload.', 'contactlift-pro' ) ) ) );

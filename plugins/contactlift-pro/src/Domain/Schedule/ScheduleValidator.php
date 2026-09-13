@@ -43,7 +43,7 @@ final class ScheduleValidator {
 		$exceptions = $this->validate_exceptions( $raw['exceptions'] ?? array(), $errors );
 
 		if ( $errors ) {
-			throw new ValidationException( $errors );
+			throw new ValidationException( $errors ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- field messages are esc_html()'d by the admin screen that catches this, never echoed here.
 		}
 
 		return array(

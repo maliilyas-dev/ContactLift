@@ -219,7 +219,7 @@ final class SettingsExtension {
 
 		$raw = array(
 			'analytics_mode'           => sanitize_key( wp_unslash( $_POST['analytics_mode'] ?? 'off' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified above via check_admin_referer().
-			'callback_recipients'      => preg_split( '/[\r\n]+/', (string) wp_unslash( $_POST['callback_recipients'] ?? '' ), -1, PREG_SPLIT_NO_EMPTY ), // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified above via check_admin_referer().
+			'callback_recipients'      => preg_split( '/[\r\n]+/', (string) wp_unslash( $_POST['callback_recipients'] ?? '' ), -1, PREG_SPLIT_NO_EMPTY ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- verified above via check_admin_referer(); preg_split() only breaks the unslashed text into lines, each one sanitized via sanitize_email() a few lines below before this array is used for anything.
 			'privacy_url'              => sanitize_text_field( wp_unslash( $_POST['privacy_url'] ?? '' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			'consent_copy'             => sanitize_textarea_field( wp_unslash( $_POST['consent_copy'] ?? '' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			'consent_version'          => $current['consent_version'] ?? 1,

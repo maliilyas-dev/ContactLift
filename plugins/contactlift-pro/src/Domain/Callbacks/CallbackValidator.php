@@ -71,7 +71,7 @@ final class CallbackValidator {
 		}
 
 		if ( $errors ) {
-			throw new ValidationException( $errors );
+			throw new ValidationException( $errors ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- every message here is a static, plugin-authored translated string, never user input reflected back; the REST layer that catches this returns them as a JSON body, not raw HTML, so no HTML-escaping context applies either.
 		}
 
 		return array(

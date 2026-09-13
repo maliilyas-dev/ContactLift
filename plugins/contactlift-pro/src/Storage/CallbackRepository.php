@@ -111,10 +111,7 @@ final class CallbackRepository {
 		$table = $wpdb->prefix . self::TABLE;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE request_uuid = %s", $request_uuid ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-			ARRAY_A
-		);
+		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE request_uuid = %s', $table, $request_uuid ), ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
 	}
@@ -128,10 +125,7 @@ final class CallbackRepository {
 		$table = $wpdb->prefix . self::TABLE;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-			ARRAY_A
-		);
+		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table, $id ), ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
 	}
@@ -147,25 +141,10 @@ final class CallbackRepository {
 
 		if ( null !== $status ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$rows = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM {$table} WHERE status = %s ORDER BY created_at_utc DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-					$status,
-					$per_page,
-					$offset
-				),
-				ARRAY_A
-			);
+			$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i WHERE status = %s ORDER BY created_at_utc DESC LIMIT %d OFFSET %d', $table, $status, $per_page, $offset ), ARRAY_A );
 		} else {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$rows = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM {$table} ORDER BY created_at_utc DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-					$per_page,
-					$offset
-				),
-				ARRAY_A
-			);
+			$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY created_at_utc DESC LIMIT %d OFFSET %d', $table, $per_page, $offset ), ARRAY_A );
 		}
 
 		return is_array( $rows ) ? $rows : array();
@@ -185,13 +164,7 @@ final class CallbackRepository {
 		$table = $wpdb->prefix . self::TABLE;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE phone LIKE %s ORDER BY created_at_utc DESC LIMIT 50", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-				'%' . $wpdb->esc_like( $phone ) . '%'
-			),
-			ARRAY_A
-		);
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i WHERE phone LIKE %s ORDER BY created_at_utc DESC LIMIT 50', $table, '%' . $wpdb->esc_like( $phone ) . '%' ), ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
 	}
@@ -244,21 +217,7 @@ final class CallbackRepository {
 		$table = $wpdb->prefix . self::TABLE;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$affected = $wpdb->query(
-			$wpdb->prepare(
-				"UPDATE {$table}
-				SET notification_status = %s, attempts = attempts + 1, updated_at_utc = %s
-				WHERE id = %d
-					AND notification_status IN (%s, %s)
-					AND attempts < %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-				self::NOTIF_HANDED,
-				gmdate( 'Y-m-d H:i:s' ),
-				$id,
-				self::NOTIF_PENDING,
-				self::NOTIF_FAILED,
-				self::MAX_ATTEMPTS
-			)
-		);
+		$affected = $wpdb->query( $wpdb->prepare( 'UPDATE %i SET notification_status = %s, attempts = attempts + 1, updated_at_utc = %s WHERE id = %d AND notification_status IN (%s, %s) AND attempts < %d', $table, self::NOTIF_HANDED, gmdate( 'Y-m-d H:i:s' ), $id, self::NOTIF_PENDING, self::NOTIF_FAILED, self::MAX_ATTEMPTS ) );
 
 		return is_int( $affected ) && $affected > 0;
 	}
@@ -306,11 +265,7 @@ final class CallbackRepository {
 	public function delete_older_than( \DateTimeImmutable $cutoff_utc ): void {
 		global $wpdb;
 
-		$table = $wpdb->prefix . self::TABLE;
-
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query(
-			$wpdb->prepare( "DELETE FROM {$table} WHERE created_at_utc < %s", $cutoff_utc->format( 'Y-m-d H:i:s' ) ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-		);
+		$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE created_at_utc < %s', $wpdb->prefix . self::TABLE, $cutoff_utc->format( 'Y-m-d H:i:s' ) ) );
 	}
 }

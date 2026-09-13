@@ -184,26 +184,154 @@ scope cut only); the `/runtime` and `/events` REST routes (stale-cache
 refresh and click-report events — `/events` belongs to Milestone 5's
 reporting work anyway).
 
+## Milestone 5 — Reporting, retention, export/import, privacy tools
+
+Done and verified live in wp-env. `clift_daily_stats` is populated through
+`DailyStatsRepository::increment()` (atomic `INSERT ... ON DUPLICATE KEY
+UPDATE`, never a read-then-write), reached from the REST `/events` route in
+`RuntimeController`. Recording is gated by `AnalyticsGate::
+is_recording_allowed(mode, gpc, is_admin)` — pure decision logic covering
+all three `analytics_mode` states (off / consent-required / local
+aggregate); Global Privacy Control (`Sec-GPC: 1`) and a logged-in
+administrator both unconditionally block recording regardless of mode.
+Consent-required mode is opted into client-side via
+`window.ContactLift.setAnalyticsConsent(true)`, default denied. The
+`/runtime` route (stale-cache/schedule refresh, closing the gap Milestone 4
+left open) and `/events` both went in together in `RuntimeController.php`.
+
+The Reports screen (`ReportsPage.php`) filters by date range, bar, channel,
+source and device, with CSV export that neutralizes formula-injection
+(leading `=`/`+`/`-`/`@` in any cell is prefixed to defuse it before a
+spreadsheet app opens the file). `source_id` is stored as `0`, never SQL
+`NULL`, for home/archive-page events with no specific content ID — MySQL
+treats every `NULL` as distinct from every other `NULL`, which would
+silently defeat the composite unique index the atomic increment depends on.
+
+Retention is a strict two-tier enum, not a clamped range —
+`callback_retention_days` restricted to exactly {30, 90, 180} and
+`stats_retention_days` to {30, 90} via `ProSettingsValidator::
+retention_choice()` — enforced daily by `CleanupRunner` on the existing
+`clift_pro_daily_cleanup` cron (which previously only pruned expired
+rate-limit windows).
+
+JSON export/import (`ImportExportExtension`, `ConfigDocument`,
+`ConfigImporter`) is a two-step dry-run-then-confirm flow: the first submit
+only validates and stores the normalized result in a transient; nothing
+touches `clift_settings`/`clift_bars` until the admin explicitly confirms
+the summary. Exports never include callback requests, statistics,
+recipients, or credentials.
+
+Privacy Tools integration (`PersonalData.php`) registers a policy-content
+suggestion plus a WP core exporter/eraser matched by email address for
+`clift_callbacks` rows. Phone-only requests get an authenticated
+admin-screen search/delete workflow in the callback inbox instead — no
+public phone-lookup endpoint, per the spec.
+
+An `analytics_mode` UI gap found while writing an integration test (the
+setting could be saved but never actually changed from the UI) was fixed
+with a "Click reports" card on the Settings screen.
+
+Current verified totals: 36 free unit + 58 Pro unit + 23 free integration +
+30 Pro integration = **147 tests, all green**; PHPCS clean on both
+plugins; free plugin's official Plugin Check: 0 errors, 0 warnings.
+
+## Admin UI — searchable picker component (both editions)
+
+Free's Exclusions field and Pro's "Show only on" field were native
+`<select multiple>` listboxes — functional but a poor editing experience,
+especially on a long content list, and flagged directly as needing a
+real redesign. Replaced in both plugins with `Fields::picker()`: a
+bordered card with a search-as-you-type input, a scrollable checkbox list,
+and a live "N selected" count — while keeping the exact same
+`name="field[]"` array-submission wire format, so no backend
+validation/collection code changed. Lives in the free plugin
+(`Admin/Fields.php`, `Admin/Icons.php`, `admin.css`, `admin.js`) and is
+reused as-is by Pro's `BarEditorExtension` via the existing cross-plugin
+`use ContactLift\Admin\Fields;` import. Verified live: search filtering,
+checkbox highlighting, selection persisting through filter changes, and a
+full save/reload round trip confirmed correct in `clift_bars`.
+
+## Milestone 6 — Freemius guarded adapter, packaging, GitHub
+
+The repo now lives at
+[github.com/maliilyas-dev/ContactLift](https://github.com/maliilyas-dev/ContactLift)
+(pushed as `c36b115`, both plugins' complete source, tests and docs).
+
+`contactlift-pro.php` gained a guarded Freemius adapter (`clift_fs()`),
+modeled directly on the sibling FormBridge project's proven
+`fs_dynamic_init()` integration: two placeholder constants
+(`FREEMIUS_PRODUCT_ID`, `FREEMIUS_PUBLIC_KEY`) gate everything — while
+they hold their placeholder values, Pro runs with all local features
+intact and shows a plain admin notice explaining that licensing isn't
+configured yet; nothing attempts a live Freemius call with fake
+credentials. Once real values are in place (see docs/owner-setup.md) and
+the SDK is downloaded into `vendor/freemius/`, the same code path
+registers the real menu (including the bare-slug-redirect workaround
+Freemius's own account links need — registered as a hidden submenu,
+`admin_init` redirect to the real `-account` page, CSS-hidden from the
+visible nav) with no further code changes.
+
+`scripts/check-build.sh` was generalized to check both plugins (previously
+free-only). Running the official Plugin Check against the actual built
+`contactlift-pro-1.0.0.zip` surfaced a real, systematic issue: several
+`phpcs:ignore` comments for `InterpolatedNotPrepared` sat on the wrong line
+of a multi-line SQL string (PHPCS attributes a violation to the line the
+flagged token sits on, not the line a trailing comment sits on) — some
+warnings were therefore never actually suppressed. Rather than just
+relocating comments, every raw-SQL table-name interpolation across
+`RateLimiter`, `DailyStatsRepository`, `CallbackRepository` and
+`PersonalData` was rewritten to use `$wpdb->prepare()`'s `%i` identifier
+placeholder (WP 6.2+; both plugins already require 6.8, and the pinned
+WPCS 3.4.1 supports it) — the table name now flows through `prepare()`
+itself instead of being interpolated into the query string beforehand,
+which is a strictly better fix than a suppression comment: it closes the
+class of finding at the root instead of asserting it's safe. One
+`DailyStatsRepository::query()` filter-building pattern (a `WHERE` clause
+assembled from conditionally-pushed literal fragments) hit a genuine WPCS
+static-analysis limitation that no further restructuring resolves — it's
+documented with a precise `phpcs:ignore` explaining exactly why every
+possible value of that variable is a fixed literal.
+
+Result: **`contactlift` — 0 errors, 0 warnings. `contactlift-pro` — 0
+errors, 2 warnings**, both expected and already assessed rather than
+fixed: the "required plugin not in directory" notice (self-resolves once
+free is actually published to WP.org) and `load_plugin_textdomain()`
+(genuinely still needed — WP.org's auto-translation-loading only applies
+to WP.org-hosted plugins, and Pro is Freemius-distributed). Full 147-test
+suite and PHPCS re-confirmed clean after every fix, against a real MySQL
+database via wp-env, not just syntactically.
+
 ## Next
 
-Milestone 5 — reporting (`clift_daily_stats`, the `/events` route,
-consent modes and Global Privacy Control, the Reports screen), retention
-and scheduled cleanup (the `clift_pro_daily_cleanup` cron currently only
-prunes expired rate-limit windows — callback/stats retention per the
-settings already saved needs to hook in), JSON export/import, and the
-privacy export/erasure integrations.
+Everything that can be built without owner-supplied external accounts is
+done. What's left is entirely the items in docs/owner-setup.md: a
+WordPress.org developer account + free-plugin submission, a Freemius
+account + product registration (replacing the two placeholder constants
+in `contactlift-pro.php` and downloading the real SDK into
+`vendor/freemius/`), and final business/support URLs.
 
-Also outstanding from Milestone 2, unrelated to Pro: WordPress.org
-directory screenshots/asset brief (needs the owner's final branding
-choices), WebKit testing (no Safari-based browser available through this
-session's tools), a checked-in Playwright suite. None of these are
-engineering gaps — see the "Before public release" section of
+Also outstanding from Milestone 2, unrelated to either blocker above:
+WordPress.org directory screenshots/asset brief (needs the owner's final
+branding choices), WebKit testing (no Safari-based browser available
+through this session's tools), a checked-in Playwright suite. None of
+these are engineering gaps — see the "Before public release" section of
 release-checklist.md.
+
+Two scope cuts remain intentionally deferred from Milestone 3/4, still
+worth closing eventually but not release-blockers: WooCommerce's live
+variation-switcher interaction (`{variation}` resolves to the parent
+product's tokens on first render rather than updating without a reload),
+and the schedule-exceptions admin UI (one interval per day, 5 new rows per
+save — the validator/evaluator underneath already handle the spec's full
+100-exception cap; this is an admin-UI affordance limit only).
 
 ## Blockers
 
-None for the free plugin's engineering. Per the spec's "External setup
-boundaries" and "Launch handoff," a WordPress.org account/slug and final
-business/support URLs are owner-only values (tracked in
-docs/owner-setup.md) needed before *submission*, not before the plugin
-itself is done. Freemius/Pro items don't block the free plugin at all.
+None for engineering — both plugins are feature-complete, fully tested,
+and pass Plugin Check. Every remaining item is an external account or
+value only the owner can supply (WordPress.org account/slug, Freemius
+product configuration, final business/support URLs), tracked in
+docs/owner-setup.md. Per the spec's "External setup boundaries," none of
+these block the code itself — only *submission* and *licensing
+verification*, which stay explicitly unverified until real values are
+supplied and exercised.

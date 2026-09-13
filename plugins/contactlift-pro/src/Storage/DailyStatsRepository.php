@@ -35,20 +35,7 @@ final class DailyStatsRepository {
 		$table = $wpdb->prefix . self::TABLE;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- custom table, atomic counter by design.
-		$wpdb->query(
-			$wpdb->prepare(
-				"INSERT INTO {$table} (stat_date, bar_id, action_id, channel, source_type, source_id, device, click_count)
-				VALUES (%s, %s, %s, %s, %s, %d, %s, 1)
-				ON DUPLICATE KEY UPDATE click_count = click_count + 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-				$date,
-				$bar_id,
-				$action_id,
-				$channel,
-				$source_type,
-				$source_id ?? 0,
-				$device
-			)
-		);
+		$wpdb->query( $wpdb->prepare( 'INSERT INTO %i (stat_date, bar_id, action_id, channel, source_type, source_id, device, click_count) VALUES (%s, %s, %s, %s, %s, %d, %s, 1) ON DUPLICATE KEY UPDATE click_count = click_count + 1', $table, $date, $bar_id, $action_id, $channel, $source_type, $source_id ?? 0, $device ) );
 	}
 
 	/**
@@ -58,9 +45,8 @@ final class DailyStatsRepository {
 	public function query( array $filters ): array {
 		global $wpdb;
 
-		$table  = $wpdb->prefix . self::TABLE;
 		$where  = array( '1=1' );
-		$values = array();
+		$values = array( $wpdb->prefix . self::TABLE );
 
 		if ( ! empty( $filters['from'] ) ) {
 			$where[]  = 'stat_date >= %s';
@@ -87,10 +73,8 @@ final class DailyStatsRepository {
 			$values[] = $filters['device'];
 		}
 
-		$sql = "SELECT * FROM {$table} WHERE " . implode( ' AND ', $where ) . ' ORDER BY stat_date DESC'; // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant; every value in $where is a %s/%d placeholder filled by $wpdb->prepare() below, never interpolated user input.
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $values ? $wpdb->get_results( $wpdb->prepare( $sql, $values ), ARRAY_A ) : $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql has no filter-supplied literals when $values is empty; every dynamic value otherwise flows through prepare() above.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- custom table, admin-facing report query; every element ever pushed into $where above is a fixed string literal from this method's own source, never derived from $filters' values — only whether a literal is included depends on $filters, not its text — and every actual dynamic value flows through the %i/%s placeholders resolved by prepare() in this same expression.
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i WHERE ' . implode( ' AND ', $where ) . ' ORDER BY stat_date DESC', $values ), ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
 	}
@@ -102,11 +86,7 @@ final class DailyStatsRepository {
 	public function delete_older_than( string $cutoff_date ): void {
 		global $wpdb;
 
-		$table = $wpdb->prefix . self::TABLE;
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query(
-			$wpdb->prepare( "DELETE FROM {$table} WHERE stat_date < %s", $cutoff_date ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is our own prefix + fixed constant, never user input.
-		);
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- bulk retention cleanup on a custom table, not a cached query.
+		$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE stat_date < %s', $wpdb->prefix . self::TABLE, $cutoff_date ) );
 	}
 }
