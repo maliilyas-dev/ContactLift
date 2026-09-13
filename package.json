@@ -1,0 +1,22 @@
+{
+    "name": "contactlift",
+    "version": "1.0.0",
+    "private": true,
+    "description": "ContactLift Smart Contact Bar and ContactLift Pro.",
+    "author": "Muhammad Ali Ilyas <hi@m-ali.dev> (https://m-ali.dev)",
+    "license": "GPL-2.0-or-later",
+    "scripts": {
+        "env:start": "wp-env start",
+        "env:stop": "wp-env stop",
+        "env:destroy": "wp-env destroy",
+        "makepot:free": "wp-env run cli -- wp i18n make-pot /var/www/html/wp-content/plugins/contactlift /var/www/html/wp-content/plugins/contactlift/languages/contactlift.pot --slug=contactlift --domain=contactlift",
+        "makepot:pro": "wp-env run cli -- wp i18n make-pot /var/www/html/wp-content/plugins/contactlift-pro /var/www/html/wp-content/plugins/contactlift-pro/languages/contactlift-pro.pot --slug=contactlift-pro --domain=contactlift-pro",
+        "test:integration": "wp-env run tests-cli -- /var/www/html/wp-content/contactlift-src/vendor/bin/phpunit -c /var/www/html/wp-content/contactlift-src/phpunit-integration.xml.dist",
+        "test:integration:pro": "wp-env run tests-cli -- /var/www/html/wp-content/contactlift-src/vendor/bin/phpunit -c /var/www/html/wp-content/contactlift-src/phpunit-integration-pro.xml.dist",
+        "build": "bash scripts/build.sh",
+        "check-build": "bash scripts/check-build.sh"
+    },
+    "devDependencies": {
+        "@wordpress/env": "^10.0.0"
+    }
+}

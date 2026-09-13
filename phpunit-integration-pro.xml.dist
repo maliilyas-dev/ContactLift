@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- Pro integration suite: runs against the real WP test suite with both
+     plugins loaded, inside wp-env only. See README.md "Running tests". -->
+<phpunit
+    bootstrap="tests/integration-pro/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    beStrictAboutTestsThatDoNotTestAnything="false"
+>
+    <testsuites>
+        <testsuite name="integration-pro">
+            <directory suffix="Test.php">tests/integration-pro</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

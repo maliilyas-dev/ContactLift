@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- ContactLift Pro's fast unit suite: domain logic (schedule, targeting)
+     tested without booting WordPress. Run locally with `composer run test:pro`. -->
+<phpunit
+    bootstrap="tests/unit-pro/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    beStrictAboutTestsThatDoNotTestAnything="false"
+>
+    <testsuites>
+        <testsuite name="unit-pro">
+            <directory suffix="Test.php">tests/unit-pro</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Fast unit suite: domain logic tested without booting WordPress. Run locally with `composer run test`. -->
+<phpunit
+    bootstrap="tests/unit/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    beStrictAboutTestsThatDoNotTestAnything="false"
+>
+    <testsuites>
+        <testsuite name="unit">
+            <directory suffix="Test.php">tests/unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

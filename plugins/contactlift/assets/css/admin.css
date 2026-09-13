@@ -1,0 +1,1044 @@
+/**
+ * ContactLift admin UI — a self-contained design system scoped to
+ * .clift-admin so it never leaks into the rest of wp-admin. Neutral/blue,
+ * per the product spec — the colour and personality budget goes to the
+ * frontend bar (assets/css/frontend.css), not here.
+ */
+
+/* ------------------------------------------------------------------ Tokens */
+
+.clift-admin {
+	--clift-a-primary: #2563eb;
+	--clift-a-primary-600: #1d4ed8;
+	--clift-a-primary-050: #eff4ff;
+	--clift-a-accent: #0ea5b7;
+
+	--clift-a-ink: #0f172a;
+	--clift-a-ink-2: #47536b;
+	--clift-a-ink-3: #6b7690;
+
+	--clift-a-border: #e2e6ee;
+	--clift-a-border-2: #edf0f5;
+	--clift-a-bg: #f5f7fb;
+	--clift-a-surface: #ffffff;
+	--clift-a-surface-2: #fafbfd;
+
+	--clift-a-ok: #12885f;
+	--clift-a-ok-bg: #e5f6ef;
+	--clift-a-warn: #b3690a;
+	--clift-a-warn-bg: #fdf2e2;
+	--clift-a-danger: #c22a2a;
+	--clift-a-danger-bg: #fdecec;
+	--clift-a-neutral-bg: #eef0f4;
+
+	--clift-a-radius: 12px;
+	--clift-a-radius-sm: 8px;
+	--clift-a-shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 1px 3px rgba(15, 23, 42, .07);
+	--clift-a-shadow-lg: 0 6px 16px -4px rgba(15, 23, 42, .12), 0 2px 6px -2px rgba(15, 23, 42, .08);
+	--clift-a-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Base size for every icon that doesn't get a more specific override below
+   (card/tab/status icons do) — an SVG with only a viewBox and no explicit
+   width/height otherwise renders at the browser's default replaced-element
+   size (~300x150px), which is exactly as broken as it sounds inline. */
+.clift-a-i {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+
+.clift-a-i--sm {
+	width: 14px;
+	height: 14px;
+}
+
+.clift-a-notice svg {
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+	margin-top: 1px;
+}
+
+.clift-a-empty svg {
+	flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------------ Canvas */
+
+.clift-admin.wrap {
+	margin: 0;
+	max-width: none;
+}
+
+.clift-admin .clift-a-app {
+	margin: -10px 0 -65px -20px;
+	padding: 22px 28px 64px;
+	background: var(--clift-a-bg);
+	min-height: calc(100vh - 32px);
+	box-sizing: border-box;
+	font-family: var(--clift-a-font);
+	font-size: 14px;
+	line-height: 1.55;
+	color: var(--clift-a-ink);
+	-webkit-font-smoothing: antialiased;
+	overflow-x: hidden;
+}
+
+.clift-a-app *,
+.clift-a-app *::before,
+.clift-a-app *::after {
+	box-sizing: border-box;
+}
+
+.clift-a-shell {
+	max-width: 1180px;
+	margin: 0 auto;
+}
+
+/* ------------------------------------------------------------------ Topbar */
+
+.clift-a-topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 18px 22px;
+	border-radius: var(--clift-a-radius);
+	background: linear-gradient(100deg, #1e3a8a 0%, #2563eb 55%, #0ea5b7 100%);
+	color: #fff;
+	box-shadow: var(--clift-a-shadow-lg);
+}
+
+.clift-a-brand {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
+}
+
+.clift-a-brand__mark {
+	display: grid;
+	place-items: center;
+	width: 38px;
+	height: 38px;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, .18);
+	flex: none;
+}
+
+.clift-a-brand__mark svg {
+	width: 21px;
+	height: 21px;
+	display: block;
+	stroke: #fff;
+}
+
+.clift-a-brand__title {
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+}
+
+.clift-a-brand__title span {
+	font-weight: 400;
+	opacity: .84;
+}
+
+.clift-a-topbar__meta {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+
+.clift-a-status {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 11px;
+	border-radius: 999px;
+	font-size: 12.5px;
+	font-weight: 600;
+	background: rgba(255, 255, 255, .14);
+}
+
+.clift-a-status svg {
+	width: 14px;
+	height: 14px;
+}
+
+.clift-a-status--on {
+	background: rgba(16, 185, 129, .22);
+}
+
+.clift-a-ver {
+	font-size: 12px;
+	opacity: .78;
+}
+
+/* -------------------------------------------------------------------- Tabs */
+
+.clift-a-tabs {
+	display: flex;
+	gap: 4px;
+	margin: 14px 0 20px;
+	padding: 4px;
+	background: var(--clift-a-surface);
+	border: 1px solid var(--clift-a-border);
+	border-radius: var(--clift-a-radius-sm);
+	width: fit-content;
+	box-shadow: var(--clift-a-shadow);
+}
+
+.clift-a-tabs a {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 8px 14px;
+	border-radius: 7px;
+	font-size: 13.5px;
+	font-weight: 600;
+	color: var(--clift-a-ink-2);
+	text-decoration: none;
+}
+
+.clift-a-tabs a svg {
+	width: 15px;
+	height: 15px;
+}
+
+.clift-a-tabs a:hover {
+	background: var(--clift-a-surface-2);
+	color: var(--clift-a-ink);
+}
+
+.clift-a-tabs a.is-active {
+	background: var(--clift-a-primary-050);
+	color: var(--clift-a-primary-600);
+}
+
+/* ------------------------------------------------------------------- Cards */
+
+.clift-a-card {
+	background: var(--clift-a-surface);
+	border: 1px solid var(--clift-a-border);
+	border-radius: var(--clift-a-radius);
+	box-shadow: var(--clift-a-shadow);
+	margin-bottom: 18px;
+	overflow: hidden;
+}
+
+.clift-a-card__head {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 18px 20px;
+	border-bottom: 1px solid var(--clift-a-border-2);
+}
+
+.clift-a-card__ic {
+	display: grid;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 9px;
+	background: var(--clift-a-primary-050);
+	color: var(--clift-a-primary-600);
+	flex: none;
+}
+
+.clift-a-card__ic svg {
+	width: 18px;
+	height: 18px;
+}
+
+.clift-a-card__head h2 {
+	margin: 0 0 2px;
+	font-size: 14.5px;
+	font-weight: 650;
+	color: var(--clift-a-ink);
+}
+
+.clift-a-card__head p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--clift-a-ink-3);
+}
+
+.clift-a-card__body {
+	padding: 20px;
+}
+
+/* ----------------------------------------------------------------- Fields */
+
+.clift-a-field {
+	display: block;
+	margin-bottom: 18px;
+}
+
+/* [hidden] and .clift-a-field/.clift-a-action__icon span both carry a plain
+   class selector, so they're equal-specificity — without this, the later
+   `display: block` rules above would win the cascade and silently defeat
+   the native `hidden` attribute the action-repeater JS relies on. */
+[hidden] {
+	display: none !important;
+}
+
+.clift-a-field:last-child {
+	margin-bottom: 0;
+}
+
+.clift-a-field label.clift-a-label {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--clift-a-ink);
+	margin-bottom: 6px;
+}
+
+.clift-a-field .description {
+	margin: 6px 0 0;
+	font-size: 12.5px;
+	color: var(--clift-a-ink-3);
+}
+
+.clift-a-app input[type="text"],
+.clift-a-app input[type="email"],
+.clift-a-app input[type="tel"],
+.clift-a-app input[type="url"],
+.clift-a-app input[type="number"],
+.clift-a-app select,
+.clift-a-app textarea {
+	width: 100%;
+	max-width: 420px;
+	border: 1px solid var(--clift-a-border);
+	border-radius: var(--clift-a-radius-sm);
+	padding: 8px 11px;
+	font-size: 13.5px;
+	color: var(--clift-a-ink);
+	background: var(--clift-a-surface);
+	box-shadow: none;
+}
+
+.clift-a-app input:focus,
+.clift-a-app select:focus,
+.clift-a-app textarea:focus {
+	border-color: var(--clift-a-primary);
+	box-shadow: 0 0 0 3px var(--clift-a-primary-050);
+	outline: none;
+}
+
+.clift-a-field.has-error input,
+.clift-a-field.has-error select {
+	border-color: var(--clift-a-danger);
+}
+
+.clift-a-field__error {
+	margin: 6px 0 0;
+	font-size: 12.5px;
+	color: var(--clift-a-danger);
+	font-weight: 600;
+}
+
+/*
+ * Toggle switch. The checkbox itself is visually hidden entirely (not
+ * `appearance: none`'d — some browsers only partially honor that on
+ * checkboxes and still paint their native tick on top of custom styling).
+ * The track/thumb are separate elements driven purely by the :checked
+ * sibling selector, so there is no native control left to bleed through.
+ */
+.clift-a-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 9px;
+	font-size: 13.5px;
+	font-weight: 600;
+	line-height: 20px;
+	color: var(--clift-a-ink);
+	cursor: pointer;
+}
+
+.clift-a-toggle__input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+	padding: 0;
+}
+
+.clift-a-toggle__track {
+	position: relative;
+	width: 34px;
+	height: 20px;
+	flex: none;
+	border-radius: 999px;
+	background: #d7dce6;
+	transition: background .15s ease;
+}
+
+.clift-a-toggle__track::after {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #fff;
+	transition: left .15s ease;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+}
+
+.clift-a-toggle__input:checked + .clift-a-toggle__track {
+	background: var(--clift-a-primary);
+}
+
+.clift-a-toggle__input:checked + .clift-a-toggle__track::after {
+	left: 16px;
+}
+
+.clift-a-toggle__input:focus-visible + .clift-a-toggle__track {
+	outline: 2px solid var(--clift-a-primary);
+	outline-offset: 2px;
+}
+
+.clift-a-toggle__text {
+	display: inline-flex;
+	align-items: center;
+	height: 20px;
+}
+
+/* ------------------------------------------------------------------ Buttons */
+
+.clift-a-app .button,
+.clift-a-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	border-radius: var(--clift-a-radius-sm);
+	font-weight: 600;
+	font-size: 13px;
+	padding: 7px 14px;
+	height: auto;
+	line-height: 1.4;
+}
+
+.clift-a-app .button-primary {
+	background: var(--clift-a-primary);
+	border-color: var(--clift-a-primary-600);
+	box-shadow: none;
+	text-shadow: none;
+}
+
+.clift-a-app .button-primary:hover {
+	background: var(--clift-a-primary-600);
+}
+
+.clift-a-btn--ghost {
+	background: transparent;
+	border: 1px solid var(--clift-a-border);
+	color: var(--clift-a-ink-2);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.clift-a-btn--ghost:hover {
+	background: var(--clift-a-surface-2);
+	color: var(--clift-a-ink);
+}
+
+.clift-a-btn--danger {
+	color: var(--clift-a-danger);
+}
+
+/* -------------------------------------------------------------------- Misc */
+
+.clift-a-notice {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 13px 16px;
+	border-radius: var(--clift-a-radius-sm);
+	margin-bottom: 18px;
+	font-size: 13.5px;
+}
+
+.clift-a-notice--success {
+	background: var(--clift-a-ok-bg);
+	color: var(--clift-a-ok);
+}
+
+.clift-a-notice--error {
+	background: var(--clift-a-danger-bg);
+	color: var(--clift-a-danger);
+}
+
+.clift-a-notice ul {
+	margin: 4px 0 0;
+	padding-left: 18px;
+}
+
+.clift-a-pagehead {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 4px;
+}
+
+.clift-a-pagehead h1 {
+	font-size: 20px;
+	font-weight: 700;
+	margin: 0 0 2px;
+	padding: 0;
+	color: var(--clift-a-ink);
+}
+
+.clift-a-pagehead p {
+	margin: 0;
+	font-size: 13.5px;
+	color: var(--clift-a-ink-3);
+}
+
+.clift-a-empty {
+	text-align: center;
+	padding: 46px 24px;
+	color: var(--clift-a-ink-3);
+}
+
+.clift-a-empty svg {
+	width: 34px;
+	height: 34px;
+	color: var(--clift-a-ink-3);
+	margin-bottom: 10px;
+}
+
+/* --------------------------------------------------------------- Bars list */
+
+.clift-a-barrow {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--clift-a-border-2);
+}
+
+.clift-a-barrow:last-child {
+	border-bottom: none;
+}
+
+.clift-a-barrow__dot {
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background: var(--clift-a-ink-3);
+	flex: none;
+}
+
+.clift-a-barrow__dot.is-live {
+	background: var(--clift-a-ok);
+	box-shadow: 0 0 0 3px var(--clift-a-ok-bg);
+}
+
+.clift-a-barrow__body {
+	flex: 1;
+	min-width: 0;
+}
+
+.clift-a-barrow__title {
+	font-weight: 650;
+	font-size: 13.5px;
+	color: var(--clift-a-ink);
+}
+
+.clift-a-barrow__meta {
+	font-size: 12.5px;
+	color: var(--clift-a-ink-3);
+	margin-top: 2px;
+}
+
+/* ------------------------------------------------------------ Segmented UI */
+
+.clift-a-segmented {
+	display: inline-flex;
+	background: var(--clift-a-surface-2);
+	border: 1px solid var(--clift-a-border);
+	border-radius: var(--clift-a-radius-sm);
+	padding: 3px;
+	gap: 2px;
+}
+
+.clift-a-segmented input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.clift-a-segmented label {
+	padding: 6px 13px;
+	border-radius: 6px;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--clift-a-ink-2);
+	cursor: pointer;
+}
+
+.clift-a-segmented input:checked + label {
+	background: var(--clift-a-surface);
+	color: var(--clift-a-primary-600);
+	box-shadow: var(--clift-a-shadow);
+}
+
+/* ------------------------------------------------------------- Colour rows */
+
+.clift-a-colorfield {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.clift-a-colorfield input[type="color"] {
+	width: 38px;
+	height: 34px;
+	padding: 2px;
+	border: 1px solid var(--clift-a-border);
+	border-radius: var(--clift-a-radius-sm);
+	background: var(--clift-a-surface);
+	cursor: pointer;
+}
+
+.clift-a-colorfield input[type="text"] {
+	max-width: 120px;
+	font-family: ui-monospace, Menlo, monospace;
+}
+
+.clift-a-colorgrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 16px;
+}
+
+/* ----------------------------------------------------------- Actions list */
+
+.clift-a-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.clift-a-action {
+	border: 1px solid var(--clift-a-border);
+	border-radius: var(--clift-a-radius-sm);
+	background: var(--clift-a-surface-2);
+}
+
+.clift-a-action__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 10px;
+	padding: 10px 12px;
+}
+
+.clift-a-action__handle {
+	color: var(--clift-a-ink-3);
+	cursor: grab;
+	flex: none;
+	display: grid;
+	place-items: center;
+}
+
+.clift-a-action__handle svg {
+	width: 16px;
+	height: 16px;
+}
+
+.clift-a-action__icon {
+	width: 26px;
+	height: 26px;
+	border-radius: 7px;
+	background: var(--clift-a-primary-050);
+	color: var(--clift-a-primary-600);
+	display: grid;
+	place-items: center;
+	flex: none;
+}
+
+.clift-a-action__icon svg {
+	width: 14px;
+	height: 14px;
+}
+
+.clift-a-action__title {
+	font-weight: 650;
+	font-size: 13px;
+	flex: 1 1 100px;
+	min-width: 100px;
+	max-width: 200px;
+}
+
+.clift-a-action__bar .clift-a-toggle {
+	flex: none;
+}
+
+.clift-a-action__move,
+.clift-a-action__remove {
+	background: transparent;
+	border: 1px solid var(--clift-a-border);
+	border-radius: 6px;
+	width: 26px;
+	height: 26px;
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+	color: var(--clift-a-ink-2);
+	flex: none;
+}
+
+.clift-a-action__move svg,
+.clift-a-action__remove svg {
+	width: 13px;
+	height: 13px;
+}
+
+.clift-a-action__remove:hover {
+	color: var(--clift-a-danger);
+	border-color: var(--clift-a-danger-bg);
+	background: var(--clift-a-danger-bg);
+}
+
+.clift-a-action__body {
+	padding: 14px;
+	border-top: 1px solid var(--clift-a-border);
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 14px;
+}
+
+.clift-a-action__body .clift-a-field {
+	margin-bottom: 0;
+}
+
+.clift-a-addaction {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-top: 14px;
+}
+
+/* ------------------------------------------------------------------ Layout */
+
+.clift-a-columns {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 340px;
+	gap: 20px;
+	align-items: start;
+}
+
+/* Grid items default to min-width:auto, which refuses to shrink below its
+   content's intrinsic width — the classic cause of a grid child quietly
+   blowing out its track (and the whole page) at narrow widths. */
+.clift-a-columns > * {
+	min-width: 0;
+}
+
+@media (max-width: 1100px) {
+	.clift-a-columns {
+		grid-template-columns: 1fr;
+	}
+}
+
+.clift-a-sticky {
+	position: sticky;
+	top: 42px;
+}
+
+/* ------------------------------------------------------------------ Preview */
+
+.clift-a-preview {
+	padding: 18px;
+	max-width: 100%;
+	overflow-x: hidden;
+}
+
+.clift-a-preview__toggle {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 16px;
+}
+
+.clift-a-preview__frame {
+	position: relative;
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+	border-radius: 18px;
+	background: var(--clift-a-surface-2);
+	border: 1px solid var(--clift-a-border);
+	overflow: hidden;
+	min-height: 320px;
+}
+
+.clift-a-preview__frame.is-desktop {
+	aspect-ratio: 16 / 11;
+}
+
+.clift-a-preview__frame.is-mobile {
+	max-width: 240px;
+	margin: 0 auto;
+	aspect-ratio: 9 / 17.5;
+	border-radius: 26px;
+	border-width: 6px;
+	border-color: #1e2433;
+}
+
+.clift-a-preview__page {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+}
+
+.clift-a-preview__page::before {
+	content: "";
+	position: absolute;
+	top: 14px;
+	left: 14px;
+	right: 14px;
+	height: 8px;
+	border-radius: 4px;
+	background: var(--clift-a-border);
+}
+
+.clift-a-preview__page::after {
+	content: "";
+	position: absolute;
+	top: 30px;
+	left: 14px;
+	width: 50%;
+	height: 6px;
+	border-radius: 3px;
+	background: var(--clift-a-border-2);
+}
+
+.clift-a-preview__hint {
+	text-align: center;
+	font-size: 12px;
+	color: var(--clift-a-ink-3);
+	margin-top: 12px;
+}
+
+/* The preview reuses the real frontend.css classes for accuracy, but those
+   position via `fixed` (relative to the viewport) — contained to `absolute`
+   here so the mock bar stays inside its little frame instead of escaping
+   to the real corner of the browser window. */
+.clift-a-preview__page .clift {
+	position: absolute;
+	inset: 0;
+}
+
+.clift-a-preview__page .clift-desktop,
+.clift-a-preview__page .clift-mobile {
+	position: absolute;
+}
+
+/* frontend.css's mobile/desktop split is a `@media` breakpoint keyed off
+   the real browser viewport — correct for the live site, meaningless for a
+   ~230px mock frame sitting inside a wide admin screen. The preview's own
+   Mobile/Desktop toggle (JS-driven .is-mobile/.is-desktop on the frame)
+   overrides it explicitly instead of relying on viewport width. */
+.clift-a-preview__frame.is-mobile .clift-mobile {
+	display: flex !important;
+}
+
+.clift-a-preview__frame.is-desktop .clift-desktop {
+	display: flex !important;
+}
+
+/* Scaled down to actually fit the ~300px-wide mock frame — the real site
+   has the whole viewport to work with, this preview doesn't. */
+.clift-a-preview__page .clift-desktop {
+	bottom: 10px;
+	transform: scale(.82);
+	transform-origin: bottom right;
+}
+
+.clift-a-preview__page .clift-desktop.clift-desktop--left {
+	transform-origin: bottom left;
+}
+
+.clift-a-preview__page .clift-panel {
+	min-width: 180px;
+}
+
+/* Pro's business-hours card (BarEditorExtension) — plain, legible rows
+   using the same tokens as everything else, no bespoke component needed. */
+.clift-a-schedule {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 16px;
+}
+
+.clift-a-schedule th,
+.clift-a-schedule td {
+	padding: 8px 4px;
+	border-bottom: 1px solid var(--clift-a-border-2);
+	text-align: left;
+	vertical-align: top;
+}
+
+.clift-a-schedule th {
+	width: 110px;
+	font-weight: 600;
+	color: var(--clift-a-ink-2);
+	white-space: nowrap;
+}
+
+.clift-a-schedule__slot {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 2px 16px 2px 0;
+}
+
+.clift-a-schedule__slot input[type="time"] {
+	max-width: 110px;
+}
+
+.clift-a-schedule__exception {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 0;
+	border-bottom: 1px solid var(--clift-a-border-2);
+}
+
+.clift-a-schedule__exception input[type="time"] {
+	max-width: 110px;
+}
+
+/* Content picker (Fields::picker()) — a searchable checkbox list standing
+   in for a native <select multiple>, used by free's exclusions field and
+   Pro's include-targeting field. Checkboxes sharing one name still submit
+   as a plain array, so this is a pure front-end swap. */
+.clift-a-picker {
+	border: 1px solid var(--clift-a-border);
+	border-radius: var(--clift-a-radius-sm);
+	background: var(--clift-a-surface);
+	overflow: hidden;
+}
+
+.clift-a-picker__search-wrap {
+	position: relative;
+	border-bottom: 1px solid var(--clift-a-border-2);
+}
+
+.clift-a-picker__search-ic {
+	position: absolute;
+	left: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 15px;
+	height: 15px;
+	color: var(--clift-a-ink-3);
+	pointer-events: none;
+}
+
+.clift-a-picker__search {
+	width: 100%;
+	box-sizing: border-box;
+	border: 0;
+	padding: 10px 12px 10px 36px;
+	font: inherit;
+	font-size: 13px;
+	color: var(--clift-a-ink);
+	background: transparent;
+}
+
+.clift-a-picker__search:focus {
+	outline: none;
+	box-shadow: inset 0 -2px 0 var(--clift-a-primary);
+}
+
+.clift-a-picker__list {
+	max-height: 240px;
+	overflow-y: auto;
+}
+
+.clift-a-picker__row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 9px 12px;
+	cursor: pointer;
+	border-bottom: 1px solid var(--clift-a-border-2);
+	font-size: 13px;
+	transition: background-color .1s ease;
+}
+
+.clift-a-picker__row:last-child {
+	border-bottom: none;
+}
+
+.clift-a-picker__row:hover {
+	background: var(--clift-a-bg);
+}
+
+.clift-a-picker__row.is-checked {
+	background: var(--clift-a-primary-050);
+}
+
+.clift-a-picker__row[hidden] {
+	display: none;
+}
+
+.clift-a-picker__row input[type="checkbox"] {
+	flex: none;
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	accent-color: var(--clift-a-primary);
+}
+
+.clift-a-picker__row-title {
+	flex: 1;
+	min-width: 0;
+	color: var(--clift-a-ink);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.clift-a-picker__row-type {
+	flex: none;
+	font-size: 11px;
+	line-height: 1.6;
+	color: var(--clift-a-ink-2);
+	background: var(--clift-a-neutral-bg);
+	padding: 1px 8px;
+	border-radius: 999px;
+}
+
+.clift-a-picker__empty {
+	margin: 0;
+	padding: 18px 12px;
+	color: var(--clift-a-ink-3);
+	font-size: 13px;
+	text-align: center;
+}
+
+.clift-a-picker__count {
+	margin: 0;
+	padding: 7px 12px;
+	font-size: 12px;
+	color: var(--clift-a-ink-2);
+	background: var(--clift-a-surface-2);
+	border-top: 1px solid var(--clift-a-border-2);
+}

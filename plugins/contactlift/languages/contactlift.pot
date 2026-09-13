@@ -1,0 +1,577 @@
+# Copyright (C) 2026 Muhammad Ali Ilyas
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: ContactLift Smart Contact Bar 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/contactlift\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-12T21:17:59+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: contactlift\n"
+
+#. Plugin Name of the plugin
+#: contactlift.php
+msgid "ContactLift Smart Contact Bar"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: contactlift.php
+msgid "https://m-ali.dev/contactlift"
+msgstr ""
+
+#. Description of the plugin
+#: contactlift.php
+msgid "A floating contact bar that helps visitors call, message, book or request a callback through the right channel for the page they're on."
+msgstr ""
+
+#. Author of the plugin
+#: contactlift.php
+msgid "Muhammad Ali Ilyas"
+msgstr ""
+
+#. Author URI of the plugin
+#: contactlift.php
+msgid "https://m-ali.dev"
+msgstr ""
+
+#. translators: 1: minimum PHP version, 2: minimum WordPress version.
+#: contactlift.php:62
+#, php-format
+msgid "ContactLift requires PHP %1$s+ and WordPress %2$s+. Please upgrade your site to activate it."
+msgstr ""
+
+#: contactlift.php:76
+msgid "ContactLift does not support network-wide activation in this version. Activate it on individual sites instead."
+msgstr ""
+
+#: contactlift.php:77
+#: contactlift.php:93
+#: src/Admin/Header.php:43
+#: src/Admin/Menu.php:62
+#: src/Admin/Menu.php:63
+msgid "ContactLift"
+msgstr ""
+
+#. translators: 1: minimum PHP version, 2: minimum WordPress version.
+#: contactlift.php:88
+#, php-format
+msgid "ContactLift requires PHP %1$s+ and WordPress %2$s+."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:37
+#: src/Admin/BarsPage.php:28
+#: src/Admin/SettingsPage.php:30
+#: src/Admin/ToolsPage.php:26
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:55
+#: src/Admin/BarEditorPage.php:103
+#: src/Admin/BarsPage.php:50
+#: src/Storage/SettingsRepository.php:181
+msgid "Main contact bar"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:56
+msgid "What visitors see, and how to reach you."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:59
+msgid "Back to Bars"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:66
+msgid "Bar saved."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:74
+#: src/Admin/SettingsPage.php:60
+msgid "Some fields need attention:"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:95
+msgid "Bar"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:96
+msgid "Name is for your reference only — visitors never see it."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:101
+msgid "Name"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:106
+#: src/Admin/BarEditorPage.php:306
+msgid "Enabled"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:109
+msgid "Show on"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:119
+msgid "Actions"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:120
+msgid "Up to 4 buttons. A real destination is required before an action can be enabled."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:135
+msgid "Add action"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:145
+msgid "Appearance"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:146
+msgid "Make it match your brand — or make it pop."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:151
+msgid "Background"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:152
+msgid "Text"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:153
+msgid "Accent"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:157
+msgid "Desktop position"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:161
+msgid "Bottom right"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:162
+msgid "Bottom left"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:173
+msgid "Bottom offset (px)"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:179
+msgid "Show text labels next to icons"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:188
+msgid "Sitewide exclusions"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:189
+msgid "This bar shows on every page except the ones you pick here (up to 5)."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:201
+msgid "Cmd/Ctrl-click to select multiple. Free plans can exclude up to 5 pages."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:209
+msgid "Save bar"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:217
+msgid "Live preview"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:218
+msgid "Updates as you type."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:224
+msgid "Mobile"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:226
+msgid "Desktop"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:232
+msgid "Preview links are inert — nothing is sent."
+msgstr ""
+
+#. translators: 1: action position (1-based), 2: validation message.
+#: src/Admin/BarEditorPage.php:247
+#, php-format
+msgid "Action %1$d: %2$s"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:258
+msgid "All devices"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:259
+msgid "Mobile only"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:260
+msgid "Desktop only"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:307
+msgid "Move up"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:308
+msgid "Move down"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:309
+msgid "Remove action"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:315
+msgid "Label"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:317
+msgid "e.g. Call us"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:322
+msgid "Phone number (international)"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:328
+msgid "Pre-filled message (optional)"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:330
+msgid "Tokens: {site_name} {page_title} {page_url}"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:334
+msgid "Email address"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:340
+msgid "Subject (optional)"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:346
+msgid "Body (optional)"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:351
+msgid "Link (https://)"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:357
+msgid "Open in a new tab"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:399
+#: src/Admin/SettingsPage.php:123
+msgid "You do not have permission to do this."
+msgstr ""
+
+#: src/Admin/BarsPage.php:40
+#: src/Admin/Header.php:23
+#: src/Admin/Menu.php:71
+msgid "Bars"
+msgstr ""
+
+#: src/Admin/BarsPage.php:41
+msgid "The free edition shows one contact bar, sitewide."
+msgstr ""
+
+#: src/Admin/BarsPage.php:54
+msgid "Enabled &middot; sitewide"
+msgstr ""
+
+#: src/Admin/BarsPage.php:56
+msgid "Enabled, but no action has a destination yet"
+msgstr ""
+
+#: src/Admin/BarsPage.php:58
+msgid "Disabled"
+msgstr ""
+
+#: src/Admin/BarsPage.php:64
+msgid "Edit"
+msgstr ""
+
+#: src/Admin/BarsPage.php:70
+msgid "No bar yet."
+msgstr ""
+
+#: src/Admin/BarsPage.php:80
+msgid "View it on your site"
+msgstr ""
+
+#: src/Admin/Header.php:24
+#: src/Admin/Menu.php:75
+#: src/Admin/SettingsPage.php:44
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/Header.php:25
+#: src/Admin/Menu.php:77
+#: src/Admin/ToolsPage.php:35
+msgid "Tools"
+msgstr ""
+
+#: src/Admin/Header.php:48
+msgid "Bar is live"
+msgstr ""
+
+#: src/Admin/Header.php:48
+msgid "Not live yet"
+msgstr ""
+
+#: src/Admin/Menu.php:73
+msgid "Edit bar"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:45
+msgid "Your business identity and what happens to ContactLift's data if you remove it."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:52
+msgid "Settings saved."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:78
+msgid "Business identity"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:79
+msgid "Used in setup defaults and as a fallback token in your messages."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:84
+msgid "Business name"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:87
+msgid "Shown to visitors and available as the {site_name} token."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:94
+msgid "Show the contact bar on the site"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:95
+msgid "Finish setting up destinations on the Bars screen before enabling."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:104
+msgid "On uninstall"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:105
+msgid "By default, removing the plugin keeps your data in case you reinstall it."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:109
+msgid "Delete all ContactLift data when the plugin is deleted"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:113
+msgid "Save settings"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:36
+msgid "Preview your bar and check for anything that might be stopping it from showing."
+msgstr ""
+
+#: src/Admin/ToolsPage.php:44
+msgid "Preview"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:45
+msgid "Opens your site in a new tab. Every link is real, but nothing here sends a message on its own."
+msgstr ""
+
+#: src/Admin/ToolsPage.php:51
+msgid "Open site"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:60
+msgid "Diagnostics"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:61
+msgid "Safe to share with support — contains no personal data or credentials."
+msgstr ""
+
+#: src/Admin/ToolsPage.php:87
+msgid "ContactLift version"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:88
+msgid "WordPress version"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:89
+msgid "PHP version"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:90
+msgid "WooCommerce detected"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:90
+#: src/Admin/ToolsPage.php:91
+#: src/Admin/ToolsPage.php:92
+#: src/Admin/ToolsPage.php:93
+msgid "Yes"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:90
+#: src/Admin/ToolsPage.php:91
+#: src/Admin/ToolsPage.php:92
+msgid "No"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:91
+msgid "ContactLift Pro active"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:92
+msgid "Bar enabled sitewide"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:93
+msgid "Bar currently live"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:93
+msgid "No — check that an action has a destination"
+msgstr ""
+
+#: src/Admin/ToolsPage.php:94
+msgid "Configured actions"
+msgstr ""
+
+#: src/Domain/Channels/CallChannel.php:28
+msgid "Enter a valid phone number (7-15 digits, optional leading +). Extensions are not supported."
+msgstr ""
+
+#: src/Domain/Channels/EmailChannel.php:33
+msgid "Enter a valid email address."
+msgstr ""
+
+#: src/Domain/Channels/EmailChannel.php:37
+msgid "The subject and body can't contain line breaks."
+msgstr ""
+
+#: src/Domain/Channels/EmailChannel.php:39
+msgid "The subject is too long."
+msgstr ""
+
+#: src/Domain/Channels/EmailChannel.php:41
+msgid "The body is too long (1,000 characters max)."
+msgstr ""
+
+#: src/Domain/Channels/LinkChannel.php:35
+msgid "The link can't contain line breaks."
+msgstr ""
+
+#: src/Domain/Channels/LinkChannel.php:41
+msgid "Enter a valid https:// link."
+msgstr ""
+
+#: src/Domain/Channels/WhatsAppChannel.php:35
+msgid "Enter the international WhatsApp number, including country code."
+msgstr ""
+
+#: src/Domain/Channels/WhatsAppChannel.php:40
+msgid "The message can't contain line breaks."
+msgstr ""
+
+#: src/Domain/Channels/WhatsAppChannel.php:42
+msgid "The message template is too long (1,000 characters max)."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:52
+msgid "Give this bar a name."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:54
+msgid "The bar name is too long (80 characters max)."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:62
+msgid "Priority must be between 0 and 1000."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:68
+msgid "Choose a valid display device."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:99
+msgid "Invalid identifier."
+msgstr ""
+
+#. translators: %d: maximum number of excluded pages allowed.
+#: src/Domain/Validation/BarValidator.php:119
+#, php-format
+msgid "You can exclude up to %d pages on this plan."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:214
+msgid "Choose a valid channel."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:219
+msgid "The label is too long."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:226
+msgid "Add a destination before enabling this action."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:302
+msgid "Offset must be between 0 and 300 pixels."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:316
+msgid "Enter a valid hex colour."
+msgstr ""
+
+#: src/Domain/Validation/SettingsValidator.php:32
+msgid "The business name is too long."
+msgstr ""
+
+#: src/Frontend/ActionLinkBuilder.php:113
+msgid "Call us"
+msgstr ""
+
+#: src/Frontend/ActionLinkBuilder.php:114
+msgid "WhatsApp"
+msgstr ""
+
+#: src/Frontend/ActionLinkBuilder.php:115
+msgid "Email us"
+msgstr ""
+
+#: src/Frontend/ActionLinkBuilder.php:116
+msgid "Visit link"
+msgstr ""
+
+#: src/Frontend/ActionLinkBuilder.php:117
+msgid "Request a callback"
+msgstr ""
+
+#: src/Frontend/ActionLinkBuilder.php:120
+#: src/Frontend/Renderer.php:134
+msgid "Contact us"
+msgstr ""
+
+#: src/Frontend/Renderer.php:121
+msgid "Contact options"
+msgstr ""

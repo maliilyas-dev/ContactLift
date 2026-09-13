@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- Integration suite: runs against the real WP test suite, inside wp-env only.
+     See README.md "Running tests" for the wp-env invocation. -->
+<phpunit
+    bootstrap="tests/integration/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    beStrictAboutTestsThatDoNotTestAnything="false"
+>
+    <testsuites>
+        <testsuite name="integration">
+            <directory suffix="Test.php">tests/integration</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

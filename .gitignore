@@ -1,0 +1,10 @@
+/node_modules/
+/vendor/
+/plugins/*/vendor/
+/dist/
+/build/
+.phpunit.result.cache
+.phpunit.cache/
+*.log
+.DS_Store
+.claude/settings.local.json

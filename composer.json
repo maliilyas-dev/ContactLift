@@ -1,0 +1,43 @@
+{
+    "name": "contactlift/contactlift",
+    "description": "Dev tooling for the ContactLift free plugin and ContactLift Pro add-on.",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://m-ali.dev/contactlift",
+    "authors": [
+        {
+            "name": "Muhammad Ali Ilyas",
+            "email": "hi@m-ali.dev",
+            "homepage": "https://m-ali.dev",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "hi@m-ali.dev"
+    },
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "phpunit/phpunit": "^9.6",
+        "wp-coding-standards/wpcs": "^3.1",
+        "yoast/phpunit-polyfills": "^2.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "platform": {
+            "php": "8.2"
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "lint": "phpcs -q",
+        "lint:fix": "phpcbf",
+        "test": "phpunit -c phpunit.xml.dist",
+        "test:pro": "phpunit -c phpunit-pro.xml.dist"
+    }
+}

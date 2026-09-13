@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ruleset name="ContactLift">
+    <description>Coding standards for the ContactLift free plugin and ContactLift Pro add-on.</description>
+
+    <file>plugins/contactlift</file>
+    <file>plugins/contactlift-pro</file>
+    <file>tests</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/build/*</exclude-pattern>
+    <exclude-pattern>*/languages/*</exclude-pattern>
+    <exclude-pattern>*/assets/*</exclude-pattern>
+
+    <arg value="sp"/>
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="8"/>
+
+    <rule ref="WordPress-Extra">
+        <exclude name="WordPress.Files.FileName"/>
+        <exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped"/>
+    </rule>
+
+    <rule ref="WordPress.DB.PreparedSQL.InterpolatedNotPrepared">
+        <exclude-pattern>*/src/Storage/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.DB.DirectDatabaseQuery">
+        <exclude-pattern>*/src/Storage/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.DB.SlowDBQuery">
+        <exclude-pattern>*/src/Storage/*</exclude-pattern>
+    </rule>
+
+    <rule ref="PHPCompatibilityWP"/>
+    <config name="testVersion" value="8.2-"/>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array" value="contactlift,contactlift-pro"/>
+        </properties>
+    </rule>
+
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array" value="clift_,CLIFT_,ContactLift,ContactLiftPro"/>
+        </properties>
+    </rule>
+</ruleset>
