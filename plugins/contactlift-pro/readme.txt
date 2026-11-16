@@ -12,7 +12,7 @@ Page and product targeting, business hours, callback requests and local click re
 
 == Description ==
 
-ContactLift Pro extends the free ContactLift Smart Contact Bar with the targeting, scheduling and lead-capture tools a growing site needs — while the free bar keeps working on its own, with or without Pro installed.
+ContactLift Pro extends the free ContactLift plugin with the targeting, scheduling and lead-capture tools a growing site needs — while the free bar keeps working on its own, with or without Pro installed.
 
 = What it adds =
 

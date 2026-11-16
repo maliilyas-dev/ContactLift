@@ -2,21 +2,26 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ContactLift Smart Contact Bar 1.0.0\n"
+"Project-Id-Version: ContactLift 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/contactlift\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-16T11:56:49+00:00\n"
+"POT-Creation-Date: 2026-11-16T13:16:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: contactlift\n"
 
 #. Plugin Name of the plugin
 #: contactlift.php
-msgid "ContactLift Smart Contact Bar"
+#: contactlift.php:77
+#: contactlift.php:93
+#: src/Admin/Header.php:43
+#: src/Admin/Menu.php:62
+#: src/Admin/Menu.php:63
+msgid "ContactLift"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -47,14 +52,6 @@ msgstr ""
 
 #: contactlift.php:76
 msgid "ContactLift does not support network-wide activation in this version. Activate it on individual sites instead."
-msgstr ""
-
-#: contactlift.php:77
-#: contactlift.php:93
-#: src/Admin/Header.php:43
-#: src/Admin/Menu.php:62
-#: src/Admin/Menu.php:63
-msgid "ContactLift"
 msgstr ""
 
 #. translators: 1: minimum PHP version, 2: minimum WordPress version.

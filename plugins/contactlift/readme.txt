@@ -1,4 +1,4 @@
-=== ContactLift Smart Contact Bar ===
+=== ContactLift ===
 Contributors: rocket008008
 Tags: contact bar, whatsapp, click to call, floating button, mobile contact
 Requires at least: 6.8

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       ContactLift Smart Contact Bar
+ * Plugin Name:       ContactLift
  * Plugin URI:        https://m-ali.dev/contactlift
  * Description:       A floating contact bar that helps visitors call, message, book or request a callback through the right channel for the page they're on.
  * Version:           1.0.0
