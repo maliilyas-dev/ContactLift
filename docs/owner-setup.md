@@ -3,7 +3,7 @@
 Values only Muhammad Ali Ilyas can supply — none of these block the
 functional build (see the spec's "External setup boundaries" and "Launch
 handoff and owner setup"). Both plugins are engineering-complete, fully
-tested (147 tests green) and pass the official Plugin Check; everything
+tested (235 automated tests green) and pass the official Plugin Check; everything
 below is what's left before public release.
 
 | Item | Used for | Status |
@@ -23,28 +23,48 @@ credentials.
 
 ## Activating Freemius (exact steps)
 
-`plugins/contactlift-pro/contactlift-pro.php` currently runs with
-licensing disabled: two constants near the top of the file hold
-placeholder values, and every Freemius-dependent code path is skipped
-until they're replaced. Local Pro features (targeting, schedules,
-callbacks, reports, export/import) all work normally in this state — only
-the Account/Upgrade/licensing screens are inactive.
+`plugins/contactlift-pro/contactlift-pro.php` currently runs with licensing
+disabled: the two Freemius values near the top of the file point at
+placeholders, and every Freemius-dependent code path is skipped until both are
+replaced. Local Pro features (targeting, schedules, callbacks, reports,
+export/import) all work normally in this state — only the
+Account/Upgrade/licensing screens are inactive, and an admin notice says so.
 
 1. Create a Freemius account and register ContactLift Pro as a product in
    their dashboard (slug: `contactlift-pro`).
-2. From the Freemius dashboard, download the PHP SDK and place it at
-   `plugins/contactlift-pro/vendor/freemius/start.php` (this path is
-   already in `.gitignore` — it's fetched fresh, never committed, exactly
-   like FormBridge Pro's own SDK).
-3. In `contactlift-pro.php`, replace the two placeholder constants:
-   - `FREEMIUS_PRODUCT_ID` — the numeric product ID from the dashboard.
-   - `FREEMIUS_PUBLIC_KEY` — the public key from the dashboard.
-4. Configure pricing plans in the Freemius dashboard (the spec's pricing
-   tiers, if not already decided, need to be settled at this point).
-5. Reactivate Pro in a test site and confirm the Account/Upgrade menu
-   appears under ContactLift and licensing actually verifies against a
-   real (test-mode) Freemius account.
+2. From the Freemius dashboard, download the PHP SDK and unzip it so that
+   `plugins/contactlift-pro/vendor/freemius/start.php` exists. (`vendor/` is
+   gitignored — the SDK is fetched, never committed, exactly like FormBridge
+   Pro's. The build script ships `vendor/freemius/` and nothing else from
+   `vendor/`.)
+3. In `contactlift-pro.php`, change the **right-hand side** of these two lines
+   (leave the two `…_PLACEHOLDER` constants above them alone):
 
-No other code change is needed — `clift_fs()` in `contactlift-pro.php`
-already contains the full `fs_dynamic_init()` call with the right menu/
-slug configuration; it just returns `null` (inert) until step 3 above.
+   ```php
+   const FREEMIUS_PRODUCT_ID = FREEMIUS_PLACEHOLDER;      // -> '12345' (your numeric product ID)
+   const FREEMIUS_PUBLIC_KEY = FREEMIUS_KEY_PLACEHOLDER;  // -> 'pk_...' (your public key)
+   ```
+
+   Both must be replaced. With only one changed, Pro still treats licensing as
+   not configured rather than handing Freemius a credential it can only reject.
+4. Configure the pricing plans in the Freemius dashboard.
+5. Build the releasable zip:
+
+   ```bash
+   CLIFT_RELEASE=1 npm run build
+   ```
+
+   `CLIFT_RELEASE=1` makes the build **refuse** a Pro zip that still has
+   placeholder credentials. It also always refuses credentials without the SDK
+   (the zip would silently run unlicensed). Without the flag, a placeholder build
+   still succeeds — that's what the verification runs use — but prints a warning
+   that it is not releasable.
+6. Run `npm run check-build`. Plugin Check will now scan the bundled SDK for the
+   first time, so expect findings you haven't seen before and review them.
+7. Install the zip on a throwaway site, activate it, and confirm the
+   Account/Upgrade menu appears under ContactLift and licensing verifies against
+   a Freemius test-mode account.
+
+If the SDK is ever missing from an install that has real credentials, Pro shows
+an admin-only error notice ("the licensing component is missing…") instead of
+failing silently — the local features keep working either way.

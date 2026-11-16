@@ -186,6 +186,107 @@ final class CallbackRestTest extends WP_UnitTestCase {
 		self::assertSame( CallbackRepository::NOTIF_FAILED, $record['notification_status'] );
 	}
 
+	public function test_at15_a_database_failure_is_never_reported_as_success(): void {
+		$challenge = $this->request_challenge();
+
+		$mail_attempts = 0;
+		$count_mail    = static function () use ( &$mail_attempts ) {
+			++$mail_attempts;
+
+			return true;
+		};
+
+		// Turns only the callback INSERT into a statement against a table that
+		// doesn't exist — a genuine database failure from wpdb's point of view,
+		// while the rate limiter's own queries on the same request still work.
+		$break_insert = static function ( $sql ) {
+			if ( is_string( $sql ) && false !== stripos( $sql, 'INSERT INTO' ) && false !== strpos( $sql, 'clift_callbacks' ) ) {
+				return 'INSERT INTO clift_at15_table_that_does_not_exist (id) VALUES (1)';
+			}
+
+			return $sql;
+		};
+
+		add_filter( 'pre_wp_mail', $count_mail );
+		add_filter( 'query', $break_insert );
+
+		$response = $this->submit( $challenge['token'] );
+
+		remove_filter( 'query', $break_insert );
+		remove_filter( 'pre_wp_mail', $count_mail );
+
+		self::assertSame( 500, $response->get_status() );
+		self::assertSame( 'server_error', $response->get_data()['code'] );
+		self::assertArrayNotHasKey( 'status', $response->get_data(), 'a failed write must never carry the "received" status' );
+		self::assertSame( 0, $mail_attempts, 'no notification may go out for a request that was never stored' );
+		self::assertSame( array(), $this->repository->list(), 'nothing was stored' );
+	}
+
+	public function test_at11_a_variation_belonging_to_a_different_product_is_rejected(): void {
+		if ( ! function_exists( 'wc_get_product' ) ) {
+			self::markTestSkipped( 'WooCommerce is not loaded in this environment.' );
+		}
+
+		$product_a      = self::factory()->post->create(
+			array(
+				'post_type'   => 'product',
+				'post_status' => 'publish',
+			)
+		);
+		$product_b      = self::factory()->post->create(
+			array(
+				'post_type'   => 'product',
+				'post_status' => 'publish',
+			)
+		);
+		$variation_of_b = self::factory()->post->create(
+			array(
+				'post_type'   => 'product_variation',
+				'post_status' => 'publish',
+				'post_parent' => $product_b,
+			)
+		);
+		update_post_meta( $variation_of_b, '_price', '10' );
+
+		$challenge_for = function ( int $product_id, int $variation_id ) {
+			return $this->post_json(
+				'/contactlift/v1/callback-challenge',
+				array(
+					'source_type'  => 'product',
+					'source_id'    => $product_id,
+					'variation_id' => $variation_id,
+					'bar_id'       => SettingsRepository::DEFAULT_BAR_ID,
+					'action_id'    => 'action_callback',
+				)
+			);
+		};
+
+		self::assertSame( 200, $challenge_for( $product_b, $variation_of_b )->get_status(), 'control: a variation of the very product being viewed is accepted' );
+
+		$mismatch = $challenge_for( $product_a, $variation_of_b );
+		self::assertSame( 400, $mismatch->get_status(), 'a variation that belongs to another product is rejected' );
+		self::assertSame( 'invalid_context', $mismatch->get_data()['code'] );
+		self::assertArrayNotHasKey( 'token', $mismatch->get_data() );
+
+		self::assertSame( 400, $challenge_for( $product_a, $product_b )->get_status(), 'an ID that is not a variation at all is rejected' );
+	}
+
+	public function test_at11_a_variation_id_is_rejected_outside_a_product_context(): void {
+		$response = $this->post_json(
+			'/contactlift/v1/callback-challenge',
+			array(
+				'source_type'  => 'post',
+				'source_id'    => $this->post_id,
+				'variation_id' => $this->post_id,
+				'bar_id'       => SettingsRepository::DEFAULT_BAR_ID,
+				'action_id'    => 'action_callback',
+			)
+		);
+
+		self::assertSame( 400, $response->get_status() );
+		self::assertArrayNotHasKey( 'token', $response->get_data() );
+	}
+
 	public function test_invalid_challenge_token_is_rejected(): void {
 		$response = $this->submit( 'not-a-real-token' );
 

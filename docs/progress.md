@@ -186,7 +186,12 @@ reporting work anyway).
 
 ## Milestone 5 — Reporting, retention, export/import, privacy tools
 
-Done and verified live in wp-env. `clift_daily_stats` is populated through
+Built and covered by automated tests. (Honest correction: the click-reporting
+*browser client* was later found to be broken in a real browser — it 404'd on
+plain-permalink sites and 400'd on the home page and archives, so nothing was
+ever recorded there. Fixed and verified in the 2026-11-16 round below. An
+earlier version of this entry said "verified live", which overstated it.)
+`clift_daily_stats` is populated through
 `DailyStatsRepository::increment()` (atomic `INSERT ... ON DUPLICATE KEY
 UPDATE`, never a read-then-write), reached from the REST `/events` route in
 `RuntimeController`. Recording is gated by `AnalyticsGate::
@@ -231,9 +236,8 @@ An `analytics_mode` UI gap found while writing an integration test (the
 setting could be saved but never actually changed from the UI) was fixed
 with a "Click reports" card on the Settings screen.
 
-Current verified totals: 36 free unit + 58 Pro unit + 23 free integration +
-30 Pro integration = **147 tests, all green**; PHPCS clean on both
-plugins; free plugin's official Plugin Check: 0 errors, 0 warnings.
+Totals at the end of this milestone were 147 tests; see the 2026-11-16
+round below for the current figures (235) and what that round added.
 
 ## Admin UI — searchable picker component (both editions)
 
@@ -297,41 +301,66 @@ errors, 2 warnings**, both expected and already assessed rather than
 fixed: the "required plugin not in directory" notice (self-resolves once
 free is actually published to WP.org) and `load_plugin_textdomain()`
 (genuinely still needed — WP.org's auto-translation-loading only applies
-to WP.org-hosted plugins, and Pro is Freemius-distributed). Full 147-test
-suite and PHPCS re-confirmed clean after every fix, against a real MySQL
+to WP.org-hosted plugins, and Pro is Freemius-distributed). The test suite
+and PHPCS were re-confirmed clean after every fix, against a real MySQL
 database via wp-env, not just syntactically.
+
+## Release-hardening round — 2026-11-16
+
+Triggered by "how much are we done": checking the finished plugin against the
+spec's own acceptance list and lifecycle rules turned up real gaps, so they were
+closed instead of just reported. Full evidence is in
+[verification-report.md](verification-report.md); the short version:
+
+- **Acceptance tests.** AT15 had no test, AT11 and AT17 were half-covered,
+  AT12/AT18 had only been run sequentially, and Pro's 12 privileged admin
+  handlers had no AT16 denial tests. All 20 are now directly covered, including
+  a real parallel-process concurrency check.
+- **Two real bugs in click reporting**, found by running it in a real browser:
+  a plain-permalink URL bug (404) and an empty `source_id` on home/archive
+  pages (400), plus a consent-revocation race. Fixed, with JS unit tests that
+  fail on the old script.
+- **Release path.** `build.sh` would have left the Freemius SDK out of the Pro
+  zip; fixed, with guards against shipping placeholder credentials or a
+  credentials-without-SDK build, and a visible notice for the latter at runtime.
+- **Lifecycle.** Pro had no `uninstall.php` (its delete-on-uninstall flag did
+  nothing and had no UI) and no Data removal tool — both spec requirements. Built
+  and verified against real tables. Schema migration now also runs on load, not
+  only on activation.
+- **Smaller gaps.** Privacy exporter/eraser tests, Pro translation template and
+  license file, a stale free template, and release docs that still said Pro
+  didn't exist.
+
+Verified totals now: **235 automated tests** (36 + 58 PHP unit, 24 + 104
+integration, 13 JS) plus the concurrency harness, all green; PHPCS clean; Plugin
+Check 0/0 on free and 0 errors / 2 expected warnings on Pro.
+
+Two incidents worth knowing about are recorded in the verification report: a
+16-worker stress run OOM-killed this project's databases on Docker's ~2 GB VM
+(recovered, harness made lighter), and the PHPUnit suite shares its database
+and prefix with the port-8891 site (a real `DROP TABLE` there removed the test
+tables, which led to the on-load migration fix).
 
 ## Next
 
 Everything that can be built without owner-supplied external accounts is
-done. What's left is entirely the items in docs/owner-setup.md: a
-WordPress.org developer account + free-plugin submission, a Freemius
-account + product registration (replacing the two placeholder constants
-in `contactlift-pro.php` and downloading the real SDK into
-`vendor/freemius/`), and final business/support URLs.
+done. What's left is the owner-only list in docs/owner-setup.md (WordPress.org
+account and submission; a Freemius account, the two credential constants, and
+the SDK in `vendor/freemius/`; final URLs), the WordPress.org presentation
+assets, and a human smoke test of both zips on a real site.
 
-Also outstanding from Milestone 2, unrelated to either blocker above:
-WordPress.org directory screenshots/asset brief (needs the owner's final
-branding choices), WebKit testing (no Safari-based browser available
-through this session's tools), a checked-in Playwright suite. None of
-these are engineering gaps — see the "Before public release" section of
-release-checklist.md.
+When the Freemius SDK is added, re-run `npm run check-build`: Plugin Check will
+scan the bundled SDK for the first time and its findings need a look.
 
-Two scope cuts remain intentionally deferred from Milestone 3/4, still
-worth closing eventually but not release-blockers: WooCommerce's live
-variation-switcher interaction (`{variation}` resolves to the parent
-product's tokens on first render rather than updating without a reload),
-and the schedule-exceptions admin UI (one interval per day, 5 new rows per
-save — the validator/evaluator underneath already handle the spec's full
-100-exception cap; this is an admin-UI affordance limit only).
+Two scope cuts remain deliberately deferred (listed under "Known limitations"
+in release-checklist.md): WooCommerce live variation switching, and the
+schedule-exceptions admin UI (5 new rows per save; the engine handles the full
+100). Neither blocks v1.0.
 
 ## Blockers
 
-None for engineering — both plugins are feature-complete, fully tested,
-and pass Plugin Check. Every remaining item is an external account or
-value only the owner can supply (WordPress.org account/slug, Freemius
-product configuration, final business/support URLs), tracked in
-docs/owner-setup.md. Per the spec's "External setup boundaries," none of
-these block the code itself — only *submission* and *licensing
-verification*, which stay explicitly unverified until real values are
+None for engineering. Every remaining item is an external account or value only
+the owner can supply, plus the items listed as not verified. Per the spec's
+"External setup boundaries", none of these block the code — only *submission* and
+*licensing verification*, which stay explicitly unverified until real values are
 supplied and exercised.

@@ -55,18 +55,41 @@
 		return true;
 	}
 
+	/**
+	 * rest_url() is ".../wp-json/contactlift/v1/" with pretty permalinks but
+	 * ".../index.php?rest_route=/contactlift/v1/" with plain ones — that form
+	 * already contains a query string, so extra arguments have to be added
+	 * through URL, never by appending "?..." to the string (doing so folded
+	 * them into the rest_route value and every request 404'd).
+	 */
+	function restEndpoint( route, query ) {
+		var url = new URL( clift_tracking_i18n.restUrl + route, window.location.href );
+
+		Object.keys( query || {} ).forEach( function ( key ) {
+			url.searchParams.set( key, query[ key ] );
+		} );
+
+		return url.toString();
+	}
+
 	function fetchRuntimeContext() {
 		if ( null !== runtimeContext ) {
 			return Promise.resolve( runtimeContext );
 		}
 
-		var params = new URLSearchParams( {
+		var query = {
 			source_type: clift_tracking_i18n.sourceType,
-			source_id: clift_tracking_i18n.sourceId || '',
 			device: deviceBucket(),
-		} );
+		};
 
-		return fetch( clift_tracking_i18n.restUrl + 'runtime?' + params.toString(), { credentials: 'omit' } )
+		// Home and archive pages have no content ID. The route types
+		// source_id as an integer, so an empty "source_id=" is rejected with
+		// a 400 — leave the argument out entirely instead.
+		if ( clift_tracking_i18n.sourceId ) {
+			query.source_id = clift_tracking_i18n.sourceId;
+		}
+
+		return fetch( restEndpoint( 'runtime', query ), { credentials: 'omit' } )
 			.then( function ( response ) {
 				return response.ok ? response.json() : null;
 			} )
@@ -92,12 +115,15 @@
 		lastSentAt[ actionId ] = now;
 
 		fetchRuntimeContext().then( function ( ctx ) {
-			if ( ! ctx || ! ctx.context ) {
+			// Consent can be revoked while the runtime context is loading;
+			// "revocation stops subsequent events" has to win over a send
+			// that was already queued by an earlier click.
+			if ( ! ctx || ! ctx.context || ! shouldTrack() ) {
 				return;
 			}
 
 			var body = JSON.stringify( { context: ctx.context, action_id: actionId, device: deviceBucket() } );
-			var url  = clift_tracking_i18n.restUrl + 'events';
+			var url  = restEndpoint( 'events' );
 
 			if ( navigator.sendBeacon ) {
 				navigator.sendBeacon( url, new Blob( [ body ], { type: 'application/json' } ) );

@@ -1,0 +1,880 @@
+# Copyright (C) 2026 Muhammad Ali Ilyas
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: ContactLift Pro 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/contactlift-pro\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-16T12:30:11+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: contactlift-pro\n"
+
+#. Plugin Name of the plugin
+#: contactlift-pro.php
+#: contactlift-pro.php:235
+#: contactlift-pro.php:244
+msgid "ContactLift Pro"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: contactlift-pro.php
+msgid "https://m-ali.dev/contactlift"
+msgstr ""
+
+#. Description of the plugin
+#: contactlift-pro.php
+msgid "Page/post/product/category targeting, business hours, product-aware messages, callback requests and local click reports for ContactLift."
+msgstr ""
+
+#. Author of the plugin
+#: contactlift-pro.php
+msgid "Muhammad Ali Ilyas"
+msgstr ""
+
+#. Author URI of the plugin
+#: contactlift-pro.php
+msgid "https://m-ali.dev"
+msgstr ""
+
+#: contactlift-pro.php:137
+msgid "ContactLift Pro: Freemius licensing is not configured yet. Local features work normally; add your product ID and public key in contactlift-pro.php to enable Account/Upgrade screens."
+msgstr ""
+
+#: contactlift-pro.php:155
+msgid "ContactLift Pro: the licensing component is missing from this installation, so license and update features are disabled. Please reinstall ContactLift Pro from your account."
+msgstr ""
+
+#: contactlift-pro.php:217
+msgid "ContactLift Pro requires the free ContactLift plugin to be active."
+msgstr ""
+
+#: contactlift-pro.php:224
+msgid "ContactLift Pro requires a newer version of the free ContactLift plugin. Please update it."
+msgstr ""
+
+#: contactlift-pro.php:234
+msgid "ContactLift Pro does not support network-wide activation in this version. Activate it on individual sites instead."
+msgstr ""
+
+#: contactlift-pro.php:243
+msgid "ContactLift Pro requires the free ContactLift plugin to be installed and active."
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:50
+msgid "Add targeted bar"
+msgstr ""
+
+#. translators: %d: bar priority, higher wins ties.
+#: src/Admin/BarEditorExtension.php:71
+#, php-format
+msgid "Priority %d"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:78
+msgid "Edit"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:82
+msgid "Delete this bar? This cannot be undone."
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:83
+msgid "Delete"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:114
+msgid "Show only on"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:115
+msgid "Leave empty to show on every page (subject to the exclusions above). Otherwise this bar shows only on the pages picked here."
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:125
+msgid "Search pages, posts…"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:126
+msgid "Nothing to pick from yet — publish a page or post first."
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:144
+msgid "Monday"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:145
+msgid "Tuesday"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:146
+msgid "Wednesday"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:147
+msgid "Thursday"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:148
+msgid "Friday"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:149
+msgid "Saturday"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:150
+msgid "Sunday"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:157
+msgid "Business hours"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:158
+msgid "Up to two time ranges per day. A range ending earlier than it starts carries into the next day. Each action above chooses what happens to it while closed."
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:163
+msgid "Use a schedule for this bar"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:181
+msgid "All day"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:194
+msgid "Date exceptions"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:195
+msgid "Overrides the whole day above, including any overnight carry-over from the day before. Leave the date blank to skip a row; save and come back to add more."
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:208
+msgid "Closed all day"
+msgstr ""
+
+#: src/Admin/BarEditorExtension.php:310
+#: src/Admin/CallbackInboxPage.php:310
+#: src/Admin/DataRemovalExtension.php:95
+#: src/Admin/ImportExportExtension.php:157
+#: src/Admin/ImportExportExtension.php:173
+#: src/Admin/ImportExportExtension.php:206
+#: src/Admin/ImportExportExtension.php:226
+#: src/Admin/ReportsPage.php:222
+#: src/Admin/SettingsExtension.php:227
+#: src/Admin/SettingsExtension.php:265
+msgid "You do not have permission to do this."
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:49
+#: src/Admin/CallbackInboxPage.php:50
+#: src/Admin/CallbackInboxPage.php:61
+#: src/Admin/CallbackInboxPage.php:96
+#: src/Admin/SettingsExtension.php:104
+msgid "Callback requests"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:68
+#: src/Admin/ReportsPage.php:61
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:97
+msgid "Requests visitors have asked to be contacted about."
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:105
+msgid "Search by phone number"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:107
+msgid "Verify the requester's identity before deleting a match."
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:108
+msgid "Search"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:110
+msgid "Clear"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:117
+msgid "All"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:118
+#: src/Admin/CallbackInboxPage.php:215
+msgid "New"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:119
+#: src/Admin/CallbackInboxPage.php:216
+msgid "Contacted"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:120
+#: src/Admin/CallbackInboxPage.php:217
+msgid "Closed"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:132
+msgid "No callback requests yet."
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:138
+#: src/Frontend/CallbackDialog.php:53
+#: src/Privacy/PersonalData.php:82
+msgid "Name"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:139
+#: src/Frontend/CallbackDialog.php:57
+#: src/Privacy/PersonalData.php:86
+msgid "Phone"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:140
+#: src/Admin/CallbackInboxPage.php:211
+msgid "Status"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:141
+msgid "Notification"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:142
+msgid "Received"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:167
+msgid "Request not found"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:178
+msgid "Back to requests"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:184
+msgid "Phone:"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:186
+msgid "Email:"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:189
+#: src/Storage/Mailer.php:88
+msgid "Message:"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:191
+msgid "Notification:"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:198
+msgid "Retry notification"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:224
+msgid "Update status"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:236
+msgid "Private notes"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:239
+msgid "Save notes"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:245
+msgid "Delete this request? This cannot be undone."
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:249
+msgid "Delete request"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:323
+msgid "Pending"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:324
+msgid "Sent to mail server"
+msgstr ""
+
+#: src/Admin/CallbackInboxPage.php:325
+msgid "Failed"
+msgstr ""
+
+#: src/Admin/DataRemovalExtension.php:39
+msgid "Remove retained data"
+msgstr ""
+
+#: src/Admin/DataRemovalExtension.php:40
+msgid "Deactivating or deleting ContactLift Pro keeps your callback requests and statistics unless you opt in to deletion on uninstall. Use this to remove them now, while the plugin is active."
+msgstr ""
+
+#. translators: %d: number of stored callback requests.
+#: src/Admin/DataRemovalExtension.php:61
+#, php-format
+msgid "Callback requests (%d)"
+msgstr ""
+
+#. translators: %d: number of stored statistics rows.
+#: src/Admin/DataRemovalExtension.php:73
+#, php-format
+msgid "Click statistics (%d rows)"
+msgstr ""
+
+#: src/Admin/DataRemovalExtension.php:82
+msgid "I understand this permanently deletes the selected data and can't be undone."
+msgstr ""
+
+#: src/Admin/DataRemovalExtension.php:86
+msgid "Delete selected data"
+msgstr ""
+
+#: src/Admin/DataRemovalExtension.php:131
+msgid "Nothing was deleted. Choose what to remove and tick the confirmation box."
+msgstr ""
+
+#. translators: 1: number of callback requests deleted, 2: number of statistics rows deleted.
+#: src/Admin/DataRemovalExtension.php:143
+#, php-format
+msgid "Deleted %1$d callback request(s) and %2$d statistics row(s)."
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:52
+msgid "Export configuration"
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:53
+msgid "Downloads your business settings and bars as JSON. Never includes callback requests, statistics, recipients or any credentials."
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:60
+msgid "Download JSON"
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:69
+msgid "Import configuration"
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:70
+msgid "Replaces your current business settings and bars. Review the summary before confirming — nothing changes until you do."
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:81
+msgid "Review import"
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:87
+msgid "This file couldn't be imported:"
+msgstr ""
+
+#. translators: %d: number of bars found in the file.
+#: src/Admin/ImportExportExtension.php:104
+#, php-format
+msgid "This file validated: %d bar(s) will replace your current configuration."
+msgstr ""
+
+#. translators: 1: bar name, 2: action count.
+#: src/Admin/ImportExportExtension.php:115
+#, php-format
+msgid "%1$s — %2$d action(s)"
+msgstr ""
+
+#. translators: %d: number of dropped IDs.
+#: src/Admin/ImportExportExtension.php:123
+#, php-format
+msgid "(%d exclude/include ID(s) no longer exist locally and were dropped)"
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:136
+msgid "Replace configuration now"
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:150
+msgid "Cancel"
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:182
+msgid "Choose a file to upload."
+msgstr ""
+
+#: src/Admin/ImportExportExtension.php:188
+msgid "That file is too large (256 KB max)."
+msgstr ""
+
+#: src/Admin/ReportsPage.php:41
+#: src/Admin/ReportsPage.php:42
+#: src/Admin/ReportsPage.php:54
+#: src/Admin/ReportsPage.php:72
+msgid "Reports"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:73
+msgid "Local, approximate counts of contact-action clicks. Not proof a call connected, a message was sent, or revenue was earned."
+msgstr ""
+
+#: src/Admin/ReportsPage.php:83
+msgid "Range"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:87
+msgid "Last 7 days"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:88
+msgid "Last 30 days"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:89
+msgid "Custom (up to 90 days)"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:98
+msgid "From"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:102
+msgid "To"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:107
+#: src/Admin/ReportsPage.php:156
+msgid "Bar"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:109
+msgid "All bars"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:116
+#: src/Admin/ReportsPage.php:157
+msgid "Channel"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:118
+msgid "All channels"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:125
+#: src/Admin/ReportsPage.php:159
+msgid "Device"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:127
+msgid "All devices"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:128
+msgid "Mobile"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:129
+msgid "Desktop"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:133
+msgid "Apply"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:149
+msgid "No activity recorded for this range."
+msgstr ""
+
+#: src/Admin/ReportsPage.php:155
+msgid "Date"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:158
+msgid "Source"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:160
+msgid "Clicks"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:184
+msgid "Export CSV"
+msgstr ""
+
+#: src/Admin/ReportsPage.php:206
+msgid "No activity to chart for this range."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:49
+msgid "Callback settings saved."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:57
+msgid "Some fields need attention:"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:75
+msgid "Click reports"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:76
+msgid "Off by default. Local, approximate counts only — never visitor profiles or cross-site tracking."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:81
+msgid "Reporting"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:85
+msgid "Off"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:86
+msgid "Consent required"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:87
+msgid "Local aggregate"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:95
+msgid "\"Consent required\" only counts clicks after your site calls window.ContactLift.setAnalyticsConsent(true). A visitor's Global Privacy Control signal always disables reporting for them, in either mode."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:105
+msgid "Required before a callback action can go live."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:110
+msgid "Notify these email addresses (one per line)"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:115
+msgid "Privacy policy URL"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:121
+msgid "Consent acknowledgment text"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:123
+#: src/Frontend/CallbackDialog.php:32
+msgid "I agree to be contacted about this request."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:132
+msgid "Retention and abuse limits"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:137
+msgid "Delete callback requests after"
+msgstr ""
+
+#. translators: %d: number of days.
+#: src/Admin/SettingsExtension.php:144
+#: src/Admin/SettingsExtension.php:160
+#, php-format
+msgid "%d days"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:153
+msgid "Delete click reports after"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:169
+msgid "Max attempts per visitor, per 10 minutes"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:174
+msgid "Max attempts sitewide, per hour"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:185
+msgid "On uninstall"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:186
+msgid "By default, deleting ContactLift Pro keeps your callback requests, statistics and settings — they are never removed just because a licence expires or the plugin is switched off."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:190
+msgid "Delete all ContactLift Pro data when the plugin is deleted"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:191
+msgid "Removes the callback requests, statistics and Pro settings. Your free ContactLift bar is never touched. To remove the data without deleting the plugin, use the Tools screen."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:195
+msgid "Save callback settings"
+msgstr ""
+
+#. translators: %s: relative or absolute last-cleanup time.
+#: src/Admin/SettingsExtension.php:206
+#, php-format
+msgid "Last cleanup: %s"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:207
+msgid "ago"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:210
+msgid "Cleanup has not run yet."
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:217
+msgid "Run cleanup now"
+msgstr ""
+
+#: src/Admin/SettingsExtension.php:219
+msgid "On low-traffic sites, WP-Cron only runs when someone visits the site — a real server cron calling wp-cron.php keeps this on schedule."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:37
+msgid "Enter your name."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:39
+msgid "The name can't contain line breaks."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:41
+msgid "The name is too long."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:46
+msgid "Enter a phone number."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:48
+msgid "The phone number can't contain line breaks."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:50
+msgid "The phone number is too long."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:56
+msgid "The email address is too long."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:58
+msgid "Enter a valid email address."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:64
+msgid "The message contains characters that aren't allowed."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:66
+msgid "The message is too long (1,000 characters max)."
+msgstr ""
+
+#: src/Domain/Callbacks/CallbackValidator.php:70
+msgid "Please confirm you agree to be contacted about this request."
+msgstr ""
+
+#: src/Domain/ImportExport/ConfigImporter.php:41
+msgid "That file isn't valid JSON."
+msgstr ""
+
+#: src/Domain/ImportExport/ConfigImporter.php:46
+msgid "This file was exported from a newer version of ContactLift and can't be imported here."
+msgstr ""
+
+#: src/Domain/ImportExport/ConfigImporter.php:100
+msgid "This file has no bars to import."
+msgstr ""
+
+#: src/Domain/Schedule/ScheduleValidator.php:78
+msgid "These two time ranges overlap."
+msgstr ""
+
+#: src/Domain/Schedule/ScheduleValidator.php:106
+msgid "Enter a valid start and end time."
+msgstr ""
+
+#: src/Domain/Schedule/ScheduleValidator.php:111
+msgid "Start and end can't be the same time."
+msgstr ""
+
+#: src/Domain/Schedule/ScheduleValidator.php:176
+msgid "Enter a valid date (YYYY-MM-DD)."
+msgstr ""
+
+#: src/Domain/Schedule/ScheduleValidator.php:181
+msgid "This date already has an exception."
+msgstr ""
+
+#: src/Domain/Validation/ProSettingsValidator.php:52
+msgid "Enter valid email addresses only."
+msgstr ""
+
+#: src/Domain/Validation/ProSettingsValidator.php:67
+msgid "Enter a valid web address."
+msgstr ""
+
+#: src/Frontend/Assets.php:60
+msgid "Request received."
+msgstr ""
+
+#: src/Frontend/Assets.php:61
+#: src/Rest/CallbackController.php:299
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: src/Frontend/CallbackDialog.php:45
+msgid "Close"
+msgstr ""
+
+#: src/Frontend/CallbackDialog.php:48
+msgid "Request a callback"
+msgstr ""
+
+#: src/Frontend/CallbackDialog.php:49
+msgid "Leave your details and we'll get back to you."
+msgstr ""
+
+#: src/Frontend/CallbackDialog.php:61
+msgid "Email (optional)"
+msgstr ""
+
+#: src/Frontend/CallbackDialog.php:65
+msgid "Message (optional)"
+msgstr ""
+
+#: src/Frontend/CallbackDialog.php:74
+msgid "Privacy policy"
+msgstr ""
+
+#: src/Frontend/CallbackDialog.php:81
+msgid "Leave this field empty"
+msgstr ""
+
+#: src/Frontend/CallbackDialog.php:86
+msgid "Send request"
+msgstr ""
+
+#: src/Privacy/PersonalData.php:36
+msgid "When a visitor requests a callback through ContactLift, we store their name, phone number, and any optional email address or message they provide, along with the page they submitted it from and the time of the request. This information is used only to contact them back about their request. It is not shared with third parties or used for marketing."
+msgstr ""
+
+#: src/Privacy/PersonalData.php:39
+msgid "ContactLift"
+msgstr ""
+
+#: src/Privacy/PersonalData.php:48
+#: src/Privacy/PersonalData.php:61
+#: src/Privacy/PersonalData.php:78
+msgid "ContactLift callback requests"
+msgstr ""
+
+#: src/Privacy/PersonalData.php:90
+msgid "Email"
+msgstr ""
+
+#: src/Privacy/PersonalData.php:94
+msgid "Message"
+msgstr ""
+
+#: src/Privacy/PersonalData.php:98
+msgid "Submitted"
+msgstr ""
+
+#: src/Rest/CallbackController.php:136
+msgid "This page can't be resolved."
+msgstr ""
+
+#: src/Rest/CallbackController.php:142
+msgid "This product variation can't be resolved."
+msgstr ""
+
+#: src/Rest/CallbackController.php:150
+msgid "This request option is no longer available."
+msgstr ""
+
+#: src/Rest/CallbackController.php:154
+#: src/Rest/CallbackController.php:217
+msgid "Callback requests aren't available right now."
+msgstr ""
+
+#: src/Rest/CallbackController.php:183
+msgid "Unsupported request format."
+msgstr ""
+
+#: src/Rest/CallbackController.php:187
+#: src/Rest/RuntimeController.php:169
+msgid "The request is too large."
+msgstr ""
+
+#: src/Rest/CallbackController.php:191
+msgid "This request could not be verified."
+msgstr ""
+
+#: src/Rest/CallbackController.php:196
+msgid "This form has expired. Please try again."
+msgstr ""
+
+#: src/Rest/CallbackController.php:203
+msgid "This request couldn't be submitted."
+msgstr ""
+
+#: src/Rest/CallbackController.php:231
+msgid "Please check the form and try again."
+msgstr ""
+
+#: src/Rest/CallbackController.php:289
+msgid "This request has already been submitted."
+msgstr ""
+
+#: src/Rest/CallbackController.php:414
+msgid "Too many attempts. Please try again shortly."
+msgstr ""
+
+#: src/Rest/RuntimeController.php:184
+msgid "This session has expired."
+msgstr ""
+
+#: src/Rest/RuntimeController.php:193
+msgid "This action is no longer available."
+msgstr ""
+
+#: src/Rest/RuntimeController.php:197
+msgid "Too many events."
+msgstr ""
+
+#. translators: %s: the visitor's name.
+#: src/Storage/Mailer.php:35
+#, php-format
+msgid "New callback request from %s"
+msgstr ""
+
+#: src/Storage/Mailer.php:64
+msgid "A visitor requested a callback."
+msgstr ""
+
+#. translators: %s: visitor name.
+#: src/Storage/Mailer.php:68
+#, php-format
+msgid "Name: %s"
+msgstr ""
+
+#. translators: %s: visitor phone number.
+#: src/Storage/Mailer.php:73
+#, php-format
+msgid "Phone: %s"
+msgstr ""
+
+#. translators: %s: visitor email address.
+#: src/Storage/Mailer.php:81
+#, php-format
+msgid "Email: %s"
+msgstr ""

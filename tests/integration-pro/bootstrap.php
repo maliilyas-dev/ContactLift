@@ -26,6 +26,16 @@ tests_add_filter(
 	static function (): void {
 		require '/var/www/html/wp-content/plugins/contactlift/contactlift.php';
 		require '/var/www/html/wp-content/plugins/contactlift-pro/contactlift-pro.php';
+
+		// Loaded too, when present, so the WooCommerce-dependent acceptance
+		// cases (AT11's mismatched variation ID) exercise real WC product and
+		// variation objects instead of skipping — the isolated test database
+		// doesn't share the dev site's active-plugins list.
+		$woocommerce = '/var/www/html/wp-content/plugins/woocommerce.latest-stable/woocommerce.php';
+
+		if ( is_readable( $woocommerce ) ) {
+			require $woocommerce;
+		}
 	}
 );
 

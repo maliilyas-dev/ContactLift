@@ -53,7 +53,19 @@ final class Plugin {
 		return self::$instance;
 	}
 
+	/**
+	 * Brings the schema up to date on every load, not only on activation:
+	 * plugin updates (WordPress- or Freemius-delivered) never fire the
+	 * activation hook, and a restored or copied site can be missing the
+	 * tables. Once the stored version matches this is a cached option read —
+	 * no query, no dbDelta.
+	 */
+	public function maybe_migrate(): void {
+		( new Storage\ProInstaller() )->maybe_migrate();
+	}
+
 	public function boot(): void {
+		add_action( 'init', array( $this, 'maybe_migrate' ), 1 );
 		add_filter( 'clift_resolve_bar', array( $this, 'resolve_bar' ), 10, 3 );
 		add_filter( 'clift_validate_schedule', array( $this, 'validate_schedule' ), 10, 2 );
 		add_filter( 'clift_edition_limits', static fn() => EditionLimits::pro() );
@@ -69,6 +81,7 @@ final class Plugin {
 			( new Admin\SettingsExtension() )->register();
 			( new Admin\CallbackInboxPage() )->register();
 			( new Admin\ImportExportExtension() )->register();
+			( new Admin\DataRemovalExtension() )->register();
 			( new Admin\ReportsPage() )->register();
 		} else {
 			( new Frontend\Assets() )->register();

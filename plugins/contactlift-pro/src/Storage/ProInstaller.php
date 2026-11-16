@@ -62,7 +62,10 @@ final class ProInstaller {
 		dbDelta( $this->daily_stats_table_sql( $wpdb->prefix, $charset_collate ) );
 		dbDelta( $this->rate_limits_table_sql( $wpdb->prefix, $charset_collate ) );
 
-		update_option( self::DB_VERSION_OPTION, self::DB_VERSION, false );
+		// Autoloaded on purpose: this one integer is read on every request by
+		// the check at the top of this method, and autoloading it keeps that a
+		// cached read instead of a query per page view.
+		update_option( self::DB_VERSION_OPTION, self::DB_VERSION, true );
 	}
 
 	private function callbacks_table_sql( string $prefix, string $charset_collate ): string {

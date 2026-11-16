@@ -178,6 +178,20 @@ final class SettingsExtension {
 				</div>
 			</div>
 
+			<div class="clift-a-card">
+				<div class="clift-a-card__head">
+					<span class="clift-a-card__ic"><?php echo Icons::markup( 'trash' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hardcoded SVG. ?></span>
+					<div>
+						<h2><?php esc_html_e( 'On uninstall', 'contactlift-pro' ); ?></h2>
+						<p><?php esc_html_e( 'By default, deleting ContactLift Pro keeps your callback requests, statistics and settings — they are never removed just because a licence expires or the plugin is switched off.', 'contactlift-pro' ); ?></p>
+					</div>
+				</div>
+				<div class="clift-a-card__body">
+					<?php Fields::toggle( 'delete_data_on_uninstall', __( 'Delete all ContactLift Pro data when the plugin is deleted', 'contactlift-pro' ), ! empty( $values['delete_data_on_uninstall'] ) ); ?>
+					<p class="description"><?php esc_html_e( 'Removes the callback requests, statistics and Pro settings. Your free ContactLift bar is never touched. To remove the data without deleting the plugin, use the Tools screen.', 'contactlift-pro' ); ?></p>
+				</div>
+			</div>
+
 			<?php submit_button( __( 'Save callback settings', 'contactlift-pro' ), 'secondary', 'submit', false ); ?>
 		</form>
 
@@ -227,7 +241,7 @@ final class SettingsExtension {
 			'stats_retention_days'     => absint( wp_unslash( $_POST['stats_retention_days'] ?? 90 ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			'rate_limit_per_10min'     => absint( wp_unslash( $_POST['rate_limit_per_10min'] ?? 5 ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			'rate_limit_per_hour'      => absint( wp_unslash( $_POST['rate_limit_per_hour'] ?? 100 ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			'delete_data_on_uninstall' => ! empty( $current['delete_data_on_uninstall'] ),
+			'delete_data_on_uninstall' => ! empty( $_POST['delete_data_on_uninstall'] ), // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified above via check_admin_referer().
 		);
 
 		$raw['callback_recipients'] = array_map( 'sanitize_email', $raw['callback_recipients'] );

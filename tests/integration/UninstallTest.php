@@ -56,4 +56,30 @@ final class UninstallTest extends WP_UnitTestCase {
 		$this->assertFalse( get_option( SettingsRepository::SETTINGS_OPTION ) );
 		$this->assertFalse( get_option( SettingsRepository::BARS_OPTION ) );
 	}
+
+	public function test_deleting_the_free_plugin_never_touches_pro_data(): void {
+		// "Base uninstall must not silently delete Pro callback tables."
+		update_option(
+			'clift_pro_settings',
+			array(
+				'delete_data_on_uninstall' => false,
+				'marker'                   => 'pro-settings',
+			),
+			false
+		);
+		update_option(
+			SettingsRepository::SETTINGS_OPTION,
+			array(
+				'business_name'            => 'Acme Clinic',
+				'delete_data_on_uninstall' => true,
+			),
+			false
+		);
+		update_option( SettingsRepository::BARS_OPTION, array( 'bars' => array() ), false );
+
+		include self::UNINSTALL_FILE;
+
+		$this->assertFalse( get_option( SettingsRepository::SETTINGS_OPTION ), 'the free plugin\'s own data is gone' );
+		$this->assertSame( 'pro-settings', get_option( 'clift_pro_settings' )['marker'], 'Pro\'s settings are still there' );
+	}
 }

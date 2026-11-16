@@ -23,6 +23,7 @@ ContactLift Pro extends the free ContactLift Smart Contact Bar with the targetin
 * **Local click reports.** Approximate daily counts by bar, channel, page and device — off by default, with Consent-required and Local-aggregate modes, and Global Privacy Control respected automatically. CSV export included.
 * **Configuration export/import.** Move your business settings and bars between sites as JSON, with a dry-run summary before anything changes.
 * **Retention and cleanup.** Automatic daily pruning of old callback requests and report data, with a manual "run cleanup now."
+* **Data controls.** Your callback requests and statistics are never removed just because the plugin is deactivated or a licence lapses. Deleting the plugin keeps them too, unless you opt in to deletion — and a card on the Tools screen removes them on demand. Your free ContactLift bar is never touched. Works with WordPress's own personal-data export and erase tools.
 
 This add-on requires the free ContactLift plugin to be installed and active — it does not work standalone.
 
@@ -36,7 +37,7 @@ This add-on requires the free ContactLift plugin to be installed and active — 
 == Changelog ==
 
 = 1.0.0 =
-* Initial release: page/post/product/category targeting with priority resolution, weekly business hours with date exceptions and closed-action behaviour, WooCommerce product tokens, the callback request system with an inbox, local click reports with consent modes, retention cleanup, and JSON configuration export/import.
+* Initial release: page/post/product/category targeting with priority resolution, weekly business hours with date exceptions and closed-action behaviour, WooCommerce product tokens, the callback request system with an inbox, local click reports with consent modes, retention cleanup, JSON configuration export/import, WordPress privacy-tool export and erasure, an on-demand data removal tool, and an opt-in delete-on-uninstall setting.
 
 == Upgrade Notice ==
 

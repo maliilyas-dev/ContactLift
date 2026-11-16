@@ -50,9 +50,19 @@ require_once CONTACTLIFT_PRO_PATH . 'src/Support/autoload.php';
  * exists — same as FormBridge for ActiveCampaign Pro's own integration.
  * ---------------------------------------------------------------------
  */
-const FREEMIUS_PLACEHOLDER = 'REPLACE_WITH_REAL_FREEMIUS_PRODUCT_ID';
-const FREEMIUS_PRODUCT_ID  = FREEMIUS_PLACEHOLDER;
-const FREEMIUS_PUBLIC_KEY  = 'REPLACE_WITH_REAL_FREEMIUS_PUBLIC_KEY';
+const FREEMIUS_PLACEHOLDER     = 'REPLACE_WITH_REAL_FREEMIUS_PRODUCT_ID';
+const FREEMIUS_KEY_PLACEHOLDER = 'REPLACE_WITH_REAL_FREEMIUS_PUBLIC_KEY';
+const FREEMIUS_PRODUCT_ID      = FREEMIUS_PLACEHOLDER;
+const FREEMIUS_PUBLIC_KEY      = FREEMIUS_KEY_PLACEHOLDER;
+
+/**
+ * True only once BOTH values above have been replaced — a real product ID
+ * with a placeholder key (or the reverse) would hand Freemius a credential
+ * it can only reject, so it counts as not configured.
+ */
+function clift_fs_configured(): bool {
+	return FREEMIUS_PLACEHOLDER !== FREEMIUS_PRODUCT_ID && FREEMIUS_KEY_PLACEHOLDER !== FREEMIUS_PUBLIC_KEY;
+}
 
 /**
  * Freemius instance accessor, following Freemius's own required pattern
@@ -72,7 +82,7 @@ function clift_fs() {
 
 	$attempted = true;
 
-	if ( FREEMIUS_PLACEHOLDER === FREEMIUS_PRODUCT_ID ) {
+	if ( ! clift_fs_configured() ) {
 		return null;
 	}
 
@@ -114,7 +124,7 @@ function clift_fs() {
 	return $fs;
 }
 
-if ( FREEMIUS_PLACEHOLDER === FREEMIUS_PRODUCT_ID ) {
+if ( ! clift_fs_configured() ) {
 	add_action(
 		'admin_notices',
 		static function (): void {
@@ -125,6 +135,24 @@ if ( FREEMIUS_PLACEHOLDER === FREEMIUS_PRODUCT_ID ) {
 			printf(
 				'<div class="notice notice-info"><p>%s</p></div>',
 				esc_html__( 'ContactLift Pro: Freemius licensing is not configured yet. Local features work normally; add your product ID and public key in contactlift-pro.php to enable Account/Upgrade screens.', 'contactlift-pro' )
+			);
+		}
+	);
+} elseif ( ! is_readable( CONTACTLIFT_PRO_PATH . 'vendor/freemius/start.php' ) ) {
+	// Credentials are real but the SDK isn't in this install — say so
+	// instead of silently running unlicensed. scripts/build.sh refuses to
+	// package this state, so it only appears if the SDK was removed after
+	// installation.
+	add_action(
+		'admin_notices',
+		static function (): void {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+
+			printf(
+				'<div class="notice notice-error"><p>%s</p></div>',
+				esc_html__( 'ContactLift Pro: the licensing component is missing from this installation, so license and update features are disabled. Please reinstall ContactLift Pro from your account.', 'contactlift-pro' )
 			);
 		}
 	);

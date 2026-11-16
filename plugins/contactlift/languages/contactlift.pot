@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-12T21:17:59+00:00\n"
+"POT-Creation-Date: 2026-11-16T11:56:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: contactlift\n"
@@ -63,218 +63,275 @@ msgstr ""
 msgid "ContactLift requires PHP %1$s+ and WordPress %2$s+."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:37
+#: src/Admin/BarEditorPage.php:40
 #: src/Admin/BarsPage.php:28
 #: src/Admin/SettingsPage.php:30
 #: src/Admin/ToolsPage.php:26
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:55
-#: src/Admin/BarEditorPage.php:103
+#: src/Admin/BarEditorPage.php:68
+#: src/Admin/BarEditorPage.php:125
 #: src/Admin/BarsPage.php:50
 #: src/Storage/SettingsRepository.php:181
 msgid "Main contact bar"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:56
+#: src/Admin/BarEditorPage.php:69
+msgid "New targeted bar"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:69
+#: src/Admin/Menu.php:73
+msgid "Edit bar"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:78
 msgid "What visitors see, and how to reach you."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:59
+#: src/Admin/BarEditorPage.php:81
 msgid "Back to Bars"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:66
+#: src/Admin/BarEditorPage.php:88
 msgid "Bar saved."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:74
+#: src/Admin/BarEditorPage.php:96
 #: src/Admin/SettingsPage.php:60
 msgid "Some fields need attention:"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:95
+#: src/Admin/BarEditorPage.php:117
 msgid "Bar"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:96
+#: src/Admin/BarEditorPage.php:118
 msgid "Name is for your reference only — visitors never see it."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:101
+#: src/Admin/BarEditorPage.php:123
 msgid "Name"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:106
-#: src/Admin/BarEditorPage.php:306
+#: src/Admin/BarEditorPage.php:128
+#: src/Admin/BarEditorPage.php:367
 msgid "Enabled"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:109
+#: src/Admin/BarEditorPage.php:131
 msgid "Show on"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:119
+#: src/Admin/BarEditorPage.php:136
+msgid "Priority"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:139
+msgid "When more than one bar matches a page, the highest priority wins."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:149
 msgid "Actions"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:120
+#: src/Admin/BarEditorPage.php:150
 msgid "Up to 4 buttons. A real destination is required before an action can be enabled."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:135
+#: src/Admin/BarEditorPage.php:165
 msgid "Add action"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:145
+#: src/Admin/BarEditorPage.php:175
 msgid "Appearance"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:146
+#: src/Admin/BarEditorPage.php:176
 msgid "Make it match your brand — or make it pop."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:151
+#: src/Admin/BarEditorPage.php:181
 msgid "Background"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:152
+#: src/Admin/BarEditorPage.php:182
 msgid "Text"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:153
+#: src/Admin/BarEditorPage.php:183
 msgid "Accent"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:157
+#: src/Admin/BarEditorPage.php:187
 msgid "Desktop position"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:161
+#: src/Admin/BarEditorPage.php:191
 msgid "Bottom right"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:162
+#: src/Admin/BarEditorPage.php:192
 msgid "Bottom left"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:173
+#: src/Admin/BarEditorPage.php:203
 msgid "Bottom offset (px)"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:179
+#: src/Admin/BarEditorPage.php:209
 msgid "Show text labels next to icons"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:188
-msgid "Sitewide exclusions"
+#: src/Admin/BarEditorPage.php:218
+msgid "Exclusions"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:189
-msgid "This bar shows on every page except the ones you pick here (up to 5)."
+#. translators: %d: maximum number of excluded pages allowed on this plan.
+#: src/Admin/BarEditorPage.php:223
+#, php-format
+msgid "This bar never shows on the pages you pick here (up to %d)."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:201
-msgid "Cmd/Ctrl-click to select multiple. Free plans can exclude up to 5 pages."
+#: src/Admin/BarEditorPage.php:237
+msgid "Search pages, posts…"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:209
+#: src/Admin/BarEditorPage.php:238
+msgid "Nothing to exclude yet — publish a page or post first."
+msgstr ""
+
+#. translators: %d: maximum number of excluded pages allowed on this plan.
+#: src/Admin/BarEditorPage.php:245
+#, php-format
+msgid "This plan can exclude up to %d pages."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:270
 msgid "Save bar"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:217
+#: src/Admin/BarEditorPage.php:278
 msgid "Live preview"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:218
+#: src/Admin/BarEditorPage.php:279
 msgid "Updates as you type."
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:224
+#: src/Admin/BarEditorPage.php:285
 msgid "Mobile"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:226
+#: src/Admin/BarEditorPage.php:287
 msgid "Desktop"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:232
+#: src/Admin/BarEditorPage.php:293
 msgid "Preview links are inert — nothing is sent."
 msgstr ""
 
 #. translators: 1: action position (1-based), 2: validation message.
-#: src/Admin/BarEditorPage.php:247
+#: src/Admin/BarEditorPage.php:308
 #, php-format
 msgid "Action %1$d: %2$s"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:258
+#: src/Admin/BarEditorPage.php:319
 msgid "All devices"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:259
+#: src/Admin/BarEditorPage.php:320
 msgid "Mobile only"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:260
+#: src/Admin/BarEditorPage.php:321
 msgid "Desktop only"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:307
+#: src/Admin/BarEditorPage.php:368
 msgid "Move up"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:308
+#: src/Admin/BarEditorPage.php:369
 msgid "Move down"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:309
+#: src/Admin/BarEditorPage.php:370
 msgid "Remove action"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:315
+#: src/Admin/BarEditorPage.php:376
 msgid "Label"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:317
+#: src/Admin/BarEditorPage.php:378
 msgid "e.g. Call us"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:322
+#: src/Admin/BarEditorPage.php:383
 msgid "Phone number (international)"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:328
+#: src/Admin/BarEditorPage.php:389
 msgid "Pre-filled message (optional)"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:330
+#: src/Admin/BarEditorPage.php:391
 msgid "Tokens: {site_name} {page_title} {page_url}"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:334
+#: src/Admin/BarEditorPage.php:395
 msgid "Email address"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:340
+#: src/Admin/BarEditorPage.php:401
 msgid "Subject (optional)"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:346
+#: src/Admin/BarEditorPage.php:407
 msgid "Body (optional)"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:351
+#: src/Admin/BarEditorPage.php:412
 msgid "Link (https://)"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:357
+#: src/Admin/BarEditorPage.php:418
 msgid "Open in a new tab"
 msgstr ""
 
-#: src/Admin/BarEditorPage.php:399
-#: src/Admin/SettingsPage.php:123
+#: src/Admin/BarEditorPage.php:423
+msgid "While closed"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:427
+msgid "Keep showing it"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:428
+msgid "Hide it"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:429
+msgid "Replace it with another option"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:437
+msgid "Only matters if this bar has a schedule below."
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:440
+msgid "Replacement (used only when \"Replace\" is chosen above)"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:450
+msgid "Destination (number, email or link)"
+msgstr ""
+
+#: src/Admin/BarEditorPage.php:495
+#: src/Admin/SettingsPage.php:133
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -312,6 +369,16 @@ msgstr ""
 msgid "View it on your site"
 msgstr ""
 
+#: src/Admin/Fields.php:53
+msgid "1 selected"
+msgstr ""
+
+#. translators: %d: number of items selected; read and filled in by admin.js, never printf()'d server-side.
+#: src/Admin/Fields.php:55
+#, php-format
+msgid "%d selected"
+msgstr ""
+
 #: src/Admin/Header.php:24
 #: src/Admin/Menu.php:75
 #: src/Admin/SettingsPage.php:44
@@ -330,10 +397,6 @@ msgstr ""
 
 #: src/Admin/Header.php:48
 msgid "Not live yet"
-msgstr ""
-
-#: src/Admin/Menu.php:73
-msgid "Edit bar"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:45
@@ -513,33 +576,42 @@ msgstr ""
 msgid "Choose a valid display device."
 msgstr ""
 
-#: src/Domain/Validation/BarValidator.php:99
+#: src/Domain/Validation/BarValidator.php:110
 msgid "Invalid identifier."
 msgstr ""
 
 #. translators: %d: maximum number of excluded pages allowed.
-#: src/Domain/Validation/BarValidator.php:119
+#: src/Domain/Validation/BarValidator.php:130
 #, php-format
 msgid "You can exclude up to %d pages on this plan."
 msgstr ""
 
-#: src/Domain/Validation/BarValidator.php:214
+#: src/Domain/Validation/BarValidator.php:225
 msgid "Choose a valid channel."
 msgstr ""
 
-#: src/Domain/Validation/BarValidator.php:219
+#: src/Domain/Validation/BarValidator.php:230
+#: src/Domain/Validation/BarValidator.php:303
 msgid "The label is too long."
 msgstr ""
 
-#: src/Domain/Validation/BarValidator.php:226
+#: src/Domain/Validation/BarValidator.php:237
 msgid "Add a destination before enabling this action."
 msgstr ""
 
-#: src/Domain/Validation/BarValidator.php:302
+#: src/Domain/Validation/BarValidator.php:298
+msgid "Choose a valid replacement channel."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:309
+msgid "Add a destination for the replacement."
+msgstr ""
+
+#: src/Domain/Validation/BarValidator.php:384
 msgid "Offset must be between 0 and 300 pixels."
 msgstr ""
 
-#: src/Domain/Validation/BarValidator.php:316
+#: src/Domain/Validation/BarValidator.php:398
 msgid "Enter a valid hex colour."
 msgstr ""
 
@@ -568,10 +640,10 @@ msgid "Request a callback"
 msgstr ""
 
 #: src/Frontend/ActionLinkBuilder.php:120
-#: src/Frontend/Renderer.php:134
+#: src/Frontend/Renderer.php:151
 msgid "Contact us"
 msgstr ""
 
-#: src/Frontend/Renderer.php:121
+#: src/Frontend/Renderer.php:136
 msgid "Contact options"
 msgstr ""

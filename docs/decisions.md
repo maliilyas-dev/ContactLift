@@ -427,3 +427,81 @@ rules" instruction. Newest at the bottom of each section.
   Check, since a `%i`-based rewrite changes actual query construction, not
   just comment placement. 147 tests green, then a clean Plugin Check pass,
   in that order.
+
+## Release-hardening round — 2026-11-16
+
+- **Coverage is measured against the spec's AT table, one named test per
+  scenario — not against docblock ranges.** `CallbackRestTest` was labelled
+  "AT12–AT16" and read as covering all five; AT15 (database failure) had no test
+  at all, and AT11 and AT17 were each half-covered. Tests now carry their AT
+  number in the method name (`test_at15_…`) so a gap is greppable. The
+  coverage matrix lives in verification-report.md.
+- **Capability tests use a *valid* nonce.** `ProCapabilityGatesTest` is a
+  handler × role matrix (logged-out / subscriber / editor) that plants a correct
+  nonce for each handler first. Without that, a handler that checked the nonce
+  *before* the capability would still "deny" and the test would pass for the
+  wrong reason. Nonce action/field pairs are an explicit constant map in the
+  test rather than reflection — if a handler's nonce name changes, the test
+  fails loudly. One test also asserts a denied delete leaves the stored request
+  in place.
+- **Real concurrency means real processes.** The spec's AT12/AT18 say
+  "simultaneous"/"parallel"; a sequential PHPUnit test can't show that. The
+  harness spawns separate WP-CLI processes (separate DB connections) that wait
+  for one shared start time. It was itself tested by swapping the atomic upsert
+  for read-then-write and confirming it reports the lost updates (52 ≠ 200).
+- **Workers boot WordPress core only (`--skip-plugins`)**, with the Pro
+  autoloader required by hand, and default to 8. Sixteen full-plugin workers
+  OOM-killed the databases on Docker's ~2 GB VM. The cost of the lighter setup
+  is nil for what's tested — the storage classes only need `$wpdb`.
+- **Tests that need real DDL use a throwaway table prefix.** `WP_UnitTestCase`
+  rewrites `CREATE TABLE`/`DROP TABLE` to their `TEMPORARY` forms, so creating
+  tables under a different prefix and then running `uninstall.php` exercises the
+  real drop logic without touching the suite's own tables. Separately, the
+  PHPUnit suite and the wp-env site on port 8891 **share a database and the `wp_`
+  prefix**, so a genuine `DROP TABLE` on that site breaks the suite. That
+  happened once; it is now documented, and the plugin's on-load migration makes
+  the suite recreate its own tables.
+- **The Pro integration bootstrap loads WooCommerce when present**, mirroring
+  free's, so AT11's "variation of a different product" uses real WooCommerce
+  variation objects rather than a stub that would pass whatever the validator did.
+- **`tracking.js` fixes belong in the client, not the endpoint.** The `/runtime`
+  route types `source_id` as an integer and rejects `source_id=`. Loosening a
+  public endpoint to forgive a client bug would be the wrong direction, so the
+  script now omits the argument when there is no ID, and builds URLs through
+  `URL`/`searchParams` because `rest_url()` already contains `?rest_route=` on
+  plain-permalink sites. It also re-checks consent immediately before sending, so
+  a revocation always beats an event queued behind the runtime fetch.
+- **JS tests use Node's built-in runner and a `vm` sandbox** with stubbed browser
+  APIs, running the shipped script unmodified. No bundler, no new dependency, and
+  they ran red against the old script before the fix (the real test of a test).
+- **Migration runs on `init` (priority 1), with the schema-version option
+  autoloaded.** Activation hooks don't fire on updates (WordPress or Freemius), so
+  an activation-only migration would silently skip every future schema change and
+  never heal a copied site. Autoloading the one integer keeps the per-request
+  check a cached read — asserted by a test counting queries — instead of a
+  query per page view.
+- **One `DataRemover` behind both uninstall and the admin tool.** `uninstall.php`
+  loads only Pro's autoloader (the plugin isn't running during uninstall) and
+  calls it only when the owner's flag is set. The admin tool deletes records
+  (callback requests, statistics) but not settings, and needs the capability, a
+  nonce, at least one category *and* an explicit confirmation — callback requests
+  are visitors' personal data. Per-user transients are deleted through
+  `delete_transient()`, not SQL: a raw `DELETE` left them in the object cache,
+  which a test caught.
+- **The delete-on-uninstall toggle now exists.** `SettingsExtension::handle_save`
+  used to *carry over* the stored value, so the flag could never be changed from
+  the UI; it now reads the form. (The value is still validated and normalised by
+  `ProSettingsValidator`.)
+- **The Freemius adapter counts as configured only when both values are real**,
+  and distinguishes three states: placeholders (info notice), configured but SDK
+  missing (error notice — never a silent no-op), configured and present (live).
+  `build.sh` detects placeholder mode by matching the two constant lines, bundles
+  only `vendor/freemius/` (every other `vendor` path is dev tooling), refuses a
+  real-credentials build without the SDK, and with `CLIFT_RELEASE=1` refuses
+  placeholders. The default (no flag) still builds placeholder zips, since that's
+  what every verification run uses; it just says loudly that the result isn't
+  releasable.
+- **Documentation corrected, not just extended.** progress.md had said click
+  reporting was "verified live"; the browser later proved otherwise. The entry now
+  says so rather than being quietly overwritten, and release-checklist.md no longer
+  claims Pro doesn't exist.

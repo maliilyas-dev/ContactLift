@@ -4,15 +4,20 @@ Running log of what was actually tested and the results — updated at each
 milestone gate. Nothing here is claimed unless it ran; a milestone that
 hasn't reached its gate yet simply has no entry.
 
-## Environment used so far
+## Environment
 
-- WordPress 7.1 (wp-env `core: null` → current stable at time of testing)
-- PHP 8.2.33
-- MariaDB 12.3.3 (Ubuntu 24.04 image)
-- WooCommerce (latest stable, installed but not yet exercised)
-- Official Plugin Check plugin (latest stable, installed; not yet run —
-  first run is a Milestone 2+ gate once there's frontend output to check)
-- macOS host, Docker Desktop, `@wordpress/env` ^10.0.0
+Current (the 2026-11-16 round, last section below):
+
+- WordPress 7.1.4, PHP 8.2.34, MariaDB 12.3.3 (wp-env, `core: null` = current
+  stable)
+- WooCommerce 11.3.0, Elementor 4.4.0, official Plugin Check 2.2.0
+- Node 24.9.0 (`node:test`) for the JS tests
+- macOS host, Docker Desktop (VM: about 1.9 GB RAM, 2 CPUs), `@wordpress/env`
+  ^10.0.0
+- Browser checks: the desktop app's built-in Chromium pane
+
+The Milestone 1 and 2 entries below were recorded on the versions then current
+(WordPress 7.1, PHP 8.2.33) and are left as they were.
 
 ## Milestone 1 — Foundation
 
@@ -113,8 +118,8 @@ real keyboard/DOM inspection rather than assertion-by-reading-the-code:
 | Frontend renders from the packaged copy | `wp eval` against that same throwaway install: saved a real call action, rendered via the actual `Renderer` class loaded from the zip | Correct `tel:+15551234567` markup produced — confirms the packaged file paths/autoloader work end-to-end, not just at the class level |
 | Uninstall preserves-by-default | Attempted via `wp plugin delete` on the throwaway copy | **Not actually verified this way** — `wp plugin delete` removes files but does not invoke `uninstall.php` (only `wp plugin uninstall` does); the options simply being present afterward doesn't prove anything. This behavior *is* properly verified — directly, by including `uninstall.php` with `WP_UNINSTALL_PLUGIN` defined, exactly as WordPress itself does — by the integration suite's `UninstallTest.php` (both the preserve-by-default and delete-when-opted-in paths, passing) |
 
-`plugins/contactlift-pro` doesn't exist yet, so only the free plugin is
-built; `scripts/build.sh` reports this explicitly rather than failing.
+(When this entry was written Pro didn't exist yet, so only the free plugin
+was built. Both plugins are built and checked now — see the last section.)
 
 **Theme, editor and device-width checks**:
 
@@ -138,3 +143,148 @@ Not yet run: WebKit/Safari (this session only has one Chromium-based
 pane), 1024px as its own discrete screenshot, a full automated Playwright
 suite (spec's "automate Chromium flows" — done manually/via `javascript_tool`
 this session, not as a checked-in, re-runnable test suite).
+
+## Pro add-on, hardening and release prep — 2026-11-16 round
+
+Everything below was run, not read. Where a check could not be done it says so.
+
+### Automated results (final code)
+
+| Suite | Command | Result |
+|---|---|---|
+| Coding standards | `composer run lint` | 0 errors, 0 warnings (plugins + tests) |
+| PHP unit — free | `composer run test` | 36 tests, 43 assertions |
+| PHP unit — Pro | `composer run test:pro` | 58 tests, 85 assertions |
+| Integration — free | `npm run test:integration` | 24 tests, 45 assertions |
+| Integration — Pro | `npm run test:integration:pro` | 104 tests, 223 assertions |
+| JS — `tracking.js` | `npm run test:js` | 13 tests |
+| Concurrency | `npm run test:concurrency` | 10 checks, passed |
+| **Total automated tests** | | **235** (+ the concurrency harness) |
+| Plugin Check, free zip | `npm run check-build` | "Success: Checks complete. No errors found." — 0 warnings |
+| Plugin Check, Pro zip | `npm run check-build` | 0 errors, 2 warnings (both expected — see release-checklist.md) |
+
+The two zips are rebuilt by `check-build`; their SHA-256 checksums are written
+next to them in `dist/` rather than quoted here, since they change every build.
+Free: 59 files. Pro: 67 files, including `uninstall.php`, `LICENSE.txt` and its
+translation template.
+
+### Acceptance tests AT01–AT20
+
+Scenario names are the spec's own. "Unit" means the pure-PHP suite; "Integration"
+means the real WordPress test suite.
+
+| AT | Scenario | Covered by |
+|---|---|---|
+| 01 | Normalised international WhatsApp number, Unicode message | Unit `WhatsAppChannelTest::test_at01_digits_only_path_and_single_encoding_pass` |
+| 02 | Script markup, CRLF, `javascript:` inputs | Unit `WhatsAppChannelTest::test_at02_rejects_control_characters_in_template`, `LinkChannelTest` (`rejects_javascript_scheme`, `rejects_embedded_crlf`), `EmailChannelTest::test_rejects_header_injection_via_control_characters` |
+| 03 | Exclusion and inclusion both match | Unit `BarTargetingResolverTest::test_at03_exclusion_wins_even_when_included` |
+| 04 | Equal priorities, multiple matches | Unit `…::test_at04_equal_priorities_tie_break_on_lowest_id` |
+| 05 | Default bar and targeted bar both eligible | Unit `…::test_at05_targeted_bar_wins_over_default`; Integration `ProWiringTest::test_at05_…` against live hooks |
+| 06 | 09:00 / 17:00 boundaries | Unit `ScheduleEvaluatorTest::test_at06_open_at_start_boundary_closed_at_end_boundary` |
+| 07 | Monday 22:00 to Tuesday 02:00 | Unit `…::test_at07_overnight_interval_correct_availability` |
+| 08 | Tuesday closed exception after Monday overnight | Unit `…::test_at08_closed_exception_overrides_mondays_overnight_carry_into_tuesday` |
+| 09 | UTC, Asia/Karachi, America/New_York incl. DST | Unit `…::test_at09_correct_local_evaluation_in_asia_karachi` and `…_across_a_dst_boundary_in_america_new_york` (UTC is the clock's own base zone, not separately named) |
+| 10 | Unknown token, absent product SKU | Unit `TokenResolverTest::test_unknown_token_is_dropped`, `…::test_absent_product_sku_leaves_no_braces_or_broken_punctuation` |
+| 11 | Private post or mismatched variation ID | Integration `CallbackRestTest`: `test_a_private_post_is_rejected_as_context`, **`test_at11_a_variation_belonging_to_a_different_product_is_rejected`** (real WooCommerce variation objects), **`test_at11_a_variation_id_is_rejected_outside_a_product_context`** |
+| 12 | Two simultaneous retries, same UUID | Integration `CallbackRestTest::test_at12_…` (sequential retry) **plus the parallel run in `npm run test:concurrency`**: 8 processes, 1 created / 7 duplicate / 1 stored row / 1 notification claim |
+| 13 | Same UUID, altered payload | Integration `…::test_at13_…` |
+| 14 | Mail failure after insertion | Integration `…::test_at14_…` |
+| 15 | Database failure | Integration **`…::test_at15_a_database_failure_is_never_reported_as_success`** — the callback INSERT is forced to fail; asserts HTTP 500, no `received` status, zero notification attempts, nothing stored |
+| 16 | Unauthenticated / low-privilege admin actions | Free: `CapabilityGatesTest` (8). Pro: **`ProCapabilityGatesTest`** — all 13 privileged handlers and both Pro screens, each as logged-out, subscriber and editor, with a *valid* nonce so the capability check alone must deny; plus a check that a denied delete leaves the stored request intact |
+| 17 | Rate-limit threshold and expired window | Integration `CallbackRestTest::test_the_rate_limit_returns_429_with_retry_after` (429 + `Retry-After`); **`RateLimiterTest`**: refused over the limit, allowed again in the next window, expired windows pruned, fails closed when the counter can't be written |
+| 18 | Parallel report increments | Integration `ReportingRestTest::test_at18_…` (sequential) **plus the parallel run**: 8 processes × 25 increments of one counter = exactly 200 on a single row |
+| 19 | Analytics disabled or consent revoked | Unit `AnalyticsGateTest`; Integration `ReportingRestTest` (off, GPC, administrator); **JS `tracking.test.js` (13)**; and a real-browser run (below) |
+| 20 | Malformed or oversize import | Integration `ConfigImportExportTest`: malformed JSON, newer schema version, a bar over the edition limit rejected entirely (no partial change). The 256 KB upload cap in the upload handler itself isn't exercised by a test |
+
+Bold = added in this round. Before it, AT15 had no test, AT11 and AT17 were
+half-covered, and AT12/AT18 were only run sequentially.
+
+### What this round found and fixed
+
+| # | Finding | How it was found | Fix and proof |
+|---|---|---|---|
+| 1 | **Click reports 404'd on plain-permalink sites.** `tracking.js` appended `runtime?source_type=…` to a REST base that already contains `?rest_route=`, corrupting the route | Real browser: the runtime request returned 404 and no row was written | URL built with `URL`/`searchParams`; JS test for both permalink forms (failed before, passes after) |
+| 2 | **Click reports 400'd on the home page and archives, on every permalink setting.** An empty `source_id=` was sent for pages with no content ID; the route types it as an integer | Real browser, immediately after fixing #1 (the 404 had been hiding it) | Argument omitted when there is no ID; JS test (failed before, passes after); real browser then showed runtime 200 + event 200 + one stats row |
+| 3 | A consent revocation landing between a click and the async send could still let that event through | Reading the code against the spec ("revocation stops subsequent events"), then reproduced by a failing JS test | Consent re-checked immediately before sending; JS test; real browser: runtime fetched, **no event sent**, database unchanged |
+| 4 | **`build.sh` excluded every `vendor/` directory**, so the Freemius SDK (meant for `vendor/freemius/`) would have been left out of the Pro zip and licensing would silently do nothing | Reading the build script while checking the release path | Include rule for `vendor/freemius/` only; refuses a real-credentials build without the SDK; warns on placeholders; `CLIFT_RELEASE=1` refuses them. All four paths run against a scratch copy |
+| 5 | Real Freemius credentials with a missing SDK failed silently | Same review | Admin-only notice; "configured" now requires **both** the product ID and the key. Both notices rendered via WP-CLI |
+| 6 | **Pro had no `uninstall.php`**, so its "delete data on uninstall" flag did nothing — and no screen could even set it. No admin Data removal tool either (both are in the spec) | Checking the spec's lifecycle section against the code | `DataRemover` (shared), `uninstall.php`, a Settings toggle, a Tools-screen removal card (capability + nonce + explicit confirmation), tests. Run for real against real tables: flag off keeps everything; flag on drops Pro's three tables, options, transients and cron event and leaves the free plugin's data |
+| 7 | **Schema migration only ran on activation.** Updates never fire the activation hook, so a future schema change would never apply and missing tables never healed | Tracing why tables were not recreated (see incidents) | Runs on `init`; the version option is autoloaded so the check costs no query once current (asserted by a test). The three tables dropped during testing came back on the next load |
+| 8 | Privacy-tools exporter and eraser had no tests | Searching tests for them | `PersonalDataTest` (own records only, exact match, case-insensitive, erasure scoped) |
+| 9 | Pro had no translation template; free's was stale; Pro had no `LICENSE.txt` | Checking deliverables | 199 and 147 strings generated; both ship in their zips; GPL text added |
+| 10 | Release docs described a world where Pro didn't exist | Reading them | Rewritten |
+
+### Real-browser consent check
+
+Scratch site (the wp-env tests site, port 8891, Twenty Twenty-One, plain
+permalinks), a bar with one Call action, click reports in **consent-required**
+mode, an anonymous visitor in the built-in Chromium. The `tel:` navigation was
+cancelled; ContactLift's own click listener ran untouched. Results after the
+fixes, with the database as the judge:
+
+| Phase | Requests made | Database |
+|---|---|---|
+| Click with no consent given | none at all | no row |
+| `setAnalyticsConsent(true)`, click | runtime fetch 200, then event beacon 200 | one row: `home`, `source_id 0`, `call`, `click_count 1` |
+| `setAnalyticsConsent(false)`, click | none | unchanged |
+| Grant, click, revoke in the same tick | runtime fetch only, **no event** | unchanged (still 1) |
+
+Before the fixes the same page returned 404 (then 400) from the runtime route
+and never recorded anything. The site was restored afterwards (plugins
+deactivated, options and rows removed).
+
+Not checked in a browser: pretty permalinks (covered by the JS test only), and
+the administrator exclusion — `tracking.js` isn't even enqueued for an
+administrator (`Frontend\Assets::maybe_enqueue_tracking()`), with the REST
+handler as a second gate.
+
+### Concurrency check (`npm run test:concurrency`)
+
+Eight separate PHP processes (WP-CLI, WordPress core only), each with its own
+database connection, wait for one shared start time and then race the same
+callback UUID and the same stats counter.
+
+- AT12: 1 request created, 7 told "duplicate", 0 unexpected results, 1 stored
+  row, exactly 1 process wins the notification claim, 1 attempt recorded
+- AT18: 8 × 25 increments = **200** on a single row
+- No PHP or database errors in any worker
+
+To confirm the harness can fail: the atomic upsert was temporarily replaced by a
+read-then-write counter (the pattern the spec forbids). The check reported
+**52 instead of 200** — 148 lost updates. The file was restored byte-for-byte.
+
+### Mutation checks
+
+Each of these was broken on purpose, the relevant tests were confirmed to fail,
+and the file was restored and compared byte-for-byte with what was committed:
+
+| Broken on purpose | Caught by |
+|---|---|
+| Variation must belong to the viewed product (check removed) | `test_at11_a_variation_belonging_to_a_different_product_is_rejected` |
+| Reports screen capability gate | all 3 role cases for that screen |
+| Callback inbox handler capability gate | all 12 handler cases for the inbox |
+| Uninstall opt-in flag ignored (always deletes) | both "preserved" tests |
+| Atomic counter made read-then-write | the concurrency check (52 ≠ 200) |
+| `tracking.js` URL building / empty `source_id` / revocation race | the three corresponding JS tests, against the old script |
+
+### Environment incidents (recorded because they affect how to run things)
+
+- **Docker memory.** The Docker VM has about 1.9 GB. A first concurrency run with
+  16 workers, each loading the full plugin set (WooCommerce, Elementor, …), got
+  both of this project's MariaDB containers OOM-killed (exit 137). The sibling
+  project's containers were unaffected. `wp-env start` restored them with no data
+  loss. The harness now boots core only and defaults to 8 workers, and says so in
+  its header.
+- **The PHPUnit suite and the port-8891 site share one database and the `wp_`
+  prefix.** A real `DROP TABLE` check on the 8891 site therefore dropped the
+  Pro tables the integration suite uses. The suite only worked beforehand because
+  of tables left by an earlier activation. This led to finding #7 above: Pro now
+  creates its tables on load, so the suite recreates them itself.
+
+### Not verified
+
+See "Not verified (and why)" in release-checklist.md. In short: Safari/WebKit, a
+screen reader, the Pro admin screens and callback dialog as browser-rendered
+pages (rendering is covered by integration tests; no browser pass is recorded),
+a successful outbound email, the 256 KB import cap, and anything that needs a
+Freemius account.

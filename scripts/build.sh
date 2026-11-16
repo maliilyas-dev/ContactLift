@@ -37,10 +37,18 @@ build_plugin() {
     echo "==> Staging ${slug} into ${stage}"
     mkdir -p "${stage}"
 
+    # The Freemius SDK is the one vendored dependency that must ship (Pro
+    # loads vendor/freemius/start.php at runtime); every other vendor path is
+    # dev tooling. rsync applies the first matching rule, so the includes
+    # have to come before the excludes.
     rsync -a "${src}/" "${stage}/" \
         --exclude '.git' \
         --exclude 'node_modules' \
+        --include 'vendor/' \
+        --include 'vendor/freemius/' \
+        --include 'vendor/freemius/**' \
         --exclude 'vendor' \
+        --exclude 'vendor/**' \
         --exclude 'tests' \
         --exclude '*.log' \
         --exclude '.DS_Store' \
@@ -64,6 +72,19 @@ build_plugin() {
 
     if find "${stage}" -iname '.wp-env.json' -o -iname 'phpcs.xml*' -o -iname 'phpunit*.xml*' -o -iname 'composer.json' -o -iname 'composer.lock' | grep -q .; then
         fail "dev tooling leaked into the staged copy"
+    fi
+
+    if [ "${slug}" = "contactlift-pro" ]; then
+        # Placeholder mode = either Freemius constant still points at its
+        # placeholder. Such a zip runs fine (licensing is simply inert) but
+        # must never be sold; real mode needs the SDK actually in the zip.
+        if grep -qE "^const FREEMIUS_PRODUCT_ID[[:space:]]*=[[:space:]]*FREEMIUS_PLACEHOLDER;" "${main_file}" \
+            || grep -qE "^const FREEMIUS_PUBLIC_KEY[[:space:]]*=[[:space:]]*FREEMIUS_KEY_PLACEHOLDER;" "${main_file}"; then
+            echo "WARNING: ${slug} still has placeholder Freemius credentials — licensing is DISABLED in this zip; it is NOT releasable." >&2
+            [ "${CLIFT_RELEASE:-0}" != "1" ] || fail "CLIFT_RELEASE=1 but the Freemius constants in ${slug}.php are still placeholders"
+        else
+            [ -f "${stage}/vendor/freemius/start.php" ] || fail "Freemius credentials are set but vendor/freemius/start.php is not in the build — download the SDK into plugins/${slug}/vendor/freemius/ first (docs/owner-setup.md)"
+        fi
     fi
 
     mkdir -p "${DIST}"
