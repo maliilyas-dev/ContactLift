@@ -1,6 +1,6 @@
 === ContactLift Smart Contact Bar ===
-Contributors: muhammadali
-Tags: contact bar, whatsapp, click to call, contact form, floating button
+Contributors: rocket008008
+Tags: contact bar, whatsapp, click to call, floating button, mobile contact
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.2
@@ -25,7 +25,7 @@ ContactLift adds one lightweight, colourful contact bar to your site: a bottom a
 * **Accessible by design.** 44px touch targets, visible keyboard focus, `aria-expanded` on the launcher, Escape to close, reduced-motion respected, RTL-aware.
 * **No tracking, no external requests.** Every icon and asset ships with the plugin. Nothing calls home.
 
-= Coming in ContactLift Pro =
+= Optional: ContactLift Pro =
 
 A separate Pro add-on (sold independently) builds on this same free base with page/post/product/category targeting, business hours with automatic after-hours behaviour, WooCommerce product-aware messages, a callback-request form with an inbox, and local click reports. The free bar keeps working on its own either way — Pro is optional, not a requirement.
 

@@ -1,5 +1,5 @@
 === ContactLift Pro ===
-Contributors: muhammadali
+Contributors: rocket008008
 Tags: contact bar, whatsapp, click to call, callback request, click reports
 Requires at least: 6.8
 Tested up to: 7.1
